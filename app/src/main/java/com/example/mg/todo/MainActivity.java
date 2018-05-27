@@ -1,37 +1,41 @@
 package com.example.mg.todo;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
+
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements ITodoContract.IView,
-        EditText.OnKeyListener, ListView.OnItemLongClickListener {
+        EditText.OnKeyListener, NotesRecyclerViewAdapter.OnItemLongClickListener {
+
+    @BindView(R.id.textEnter)
+    EditText textEnter;
+    @BindView(R.id.todoList)
+    RecyclerView todoList;
 
     private TodoPresenter mPresenter;
-    EditText textEnter;
-    ListView todoList;
     SharedPreferences sharedPreferences;
-    ArrayAdapter<String> adapter;
+    NotesRecyclerViewAdapter notesRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPreferences = getSharedPreferences("com.example.mg.todo", MODE_PRIVATE);
+        ButterKnife.bind(this);
+        sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
 
-        textEnter = findViewById(R.id.textEnter);
-        todoList = findViewById(R.id.todoList);
-
-        todoList.setOnItemLongClickListener(this);
         textEnter.setOnKeyListener(this);
 
         mPresenter = new TodoPresenter(this, sharedPreferences);
@@ -40,14 +44,13 @@ public class MainActivity extends AppCompatActivity implements ITodoContract.IVi
 
 
     @Override
-    public void init(Collection<? extends String> set, ArrayList<String> todoArrayList) {
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoArrayList);
-        if (set != null) {
-            todoArrayList.clear();
-            todoArrayList.addAll(set);
-        }
+    public void init(List<String> set) {
 
-        todoList.setAdapter(adapter);
+        todoList.addItemDecoration(new DividerItemDecoration(
+                todoList.getContext(),
+                DividerItemDecoration.VERTICAL));
+        notesRecyclerViewAdapter = new NotesRecyclerViewAdapter(this, set);
+        todoList.setAdapter(notesRecyclerViewAdapter);
 
     }
 
@@ -56,9 +59,8 @@ public class MainActivity extends AppCompatActivity implements ITodoContract.IVi
         return mPresenter.onKey(keyCode, event);
     }
 
-
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onItemLongClicked(int position) {
         return mPresenter.onItemLongClick(position);
     }
 }
