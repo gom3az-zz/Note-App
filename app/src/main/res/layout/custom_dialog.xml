@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="240dp"
     android:layout_height="wrap_content"
     android:background="@drawable/curvy_dialog"
-    android:orientation="vertical">
+    android:padding="8dp">
 
     <EditText
         android:id="@+id/edit_text_title"
@@ -19,7 +19,7 @@
         android:id="@+id/edit_text_description"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:layout_margin="4dp"
+        android:layout_below="@id/edit_text_title"
         android:hint="@string/hint_new_note"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
@@ -27,16 +27,27 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/btn_done"
-        android:layout_width="100dp"
+        android:id="@+id/btn_add_image"
+        android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_gravity="end"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_below="@+id/edit_text_description"
+        android:layout_toStartOf="@+id/btn_done"
+        android:background="@android:color/transparent"
+        android:text="@string/btn_add_image"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_done"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_below="@+id/edit_text_description"
+        android:layout_alignParentEnd="true"
         android:background="@android:color/transparent"
         android:text="@string/btn_done"
         android:textColor="@android:color/white"
         android:textStyle="bold" />
 
 
-</LinearLayout>
+
+</RelativeLayout>

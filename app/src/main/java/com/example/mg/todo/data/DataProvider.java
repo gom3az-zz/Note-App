@@ -14,11 +14,12 @@ import java.util.List;
 public class DataProvider {
     private SharedPreferences.Editor editor;
     private TodoPresenter mPresenter;
-    private final String KEY_NEW_NOTE = "NEW_NOTE2";
+    private final String KEY_NEW_NOTE = "NEW_NOTE5";
     private Gson gson = new Gson();
     private String json;
     private List<DataModel> mDataModels;
 
+    // TODO: 5/28/2018 change shared pref data storage to sqlite
     public DataProvider(SharedPreferences sharedPreferences, TodoPresenter todoPresenter) {
         editor = sharedPreferences.edit();
         mPresenter = todoPresenter;

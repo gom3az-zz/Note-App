@@ -1,8 +1,7 @@
 package com.example.mg.todo.ui.presenter;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.FragmentManager;
 
 import com.example.mg.todo.data.DataProvider;
 import com.example.mg.todo.data.model.DataModel;
@@ -11,7 +10,6 @@ import com.example.mg.todo.ui.contract.ITodoContract;
 import com.example.mg.todo.utils.NoteDialog;
 
 import java.util.List;
-import java.util.Objects;
 
 public class TodoPresenter implements ITodoContract.IPresenter {
     private MainActivity mView;
@@ -38,9 +36,11 @@ public class TodoPresenter implements ITodoContract.IPresenter {
 
     @Override
     public void openDialog() {
-        NoteDialog cdd = new NoteDialog(mView);
-        Objects.requireNonNull(cdd.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        cdd.show();
+        FragmentManager fm = mView.getSupportFragmentManager();
+        NoteDialog noteDialog = new NoteDialog();
+        fm.beginTransaction()
+                .add(noteDialog.getId(), noteDialog, NoteDialog.class.getName())
+                .commit();
     }
 
     @Override

@@ -1,20 +1,23 @@
 package com.example.mg.todo.data.model;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class DataModel implements Parcelable {
     private String mText;
     private String mDescription;
+    private String mImage;
 
-    public DataModel(String text , String description) {
-        this.mText = text;
-        this.mDescription = description;
+    public DataModel() {
+
     }
 
-    protected DataModel(Parcel in) {
+    private DataModel(Parcel in) {
         mText = in.readString();
         mDescription = in.readString();
+        mImage = in.readString();
+
     }
 
     public static final Creator<DataModel> CREATOR = new Creator<DataModel>() {
@@ -45,6 +48,15 @@ public class DataModel implements Parcelable {
         this.mDescription = description;
     }
 
+    public String getImage() {
+        return mImage;
+    }
+
+    public void setImage(String mImage) {
+        this.mImage = mImage;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -54,5 +66,7 @@ public class DataModel implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(mText);
         parcel.writeString(mDescription);
+        parcel.writeString(mImage);
     }
+
 }
