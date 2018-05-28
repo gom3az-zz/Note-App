@@ -14,7 +14,7 @@ import java.util.List;
 public class DataProvider {
     private SharedPreferences.Editor editor;
     private TodoPresenter mPresenter;
-    private final String KEY_NEW_NOTE = "NEW_NOTE1";
+    private final String KEY_NEW_NOTE = "NEW_NOTE2";
     private Gson gson = new Gson();
     private String json;
     private List<DataModel> mDataModels;
@@ -34,17 +34,7 @@ public class DataProvider {
         json = gson.toJson(mDataModels);
         editor.putString(KEY_NEW_NOTE, json).apply();
         mPresenter.updateRecyclerViewData(mDataModels);
-    }
 
-    public void add(String note) {
-        DataModel newObj = new DataModel(note);
-        try {
-            mDataModels.add(newObj);
-
-        } catch (NullPointerException e) {
-            mDataModels = new ArrayList<>();
-            mDataModels.add(newObj);
-        }
     }
 
     public void remove(int position) {
@@ -59,5 +49,14 @@ public class DataProvider {
         }
     }
 
+    public void addNote(DataModel newNote) {
+        try {
+            mDataModels.add(newNote);
+
+        } catch (NullPointerException e) {
+            mDataModels = new ArrayList<>();
+            mDataModels.add(newNote);
+        }
+    }
 }
 

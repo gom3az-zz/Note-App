@@ -1,7 +1,5 @@
 package com.example.mg.todo.ui.contract;
 
-import android.view.KeyEvent;
-
 import com.example.mg.todo.data.model.DataModel;
 
 import java.util.List;
@@ -15,7 +13,9 @@ public interface ITodoContract {
 
         boolean onItemLongClick(int position);
 
-        boolean onKey(int keyCode, KeyEvent event);
+        void openDialog();
+
+        void addNote(DataModel newNote);
 
         void updateRecyclerViewData(List<DataModel> newData);
     }

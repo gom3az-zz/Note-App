@@ -3,35 +3,33 @@ package com.example.mg.todo.ui;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.EditText;
 
 import com.example.mg.todo.R;
+import com.example.mg.todo.data.model.DataModel;
 import com.example.mg.todo.ui.contract.ITodoContract;
 import com.example.mg.todo.ui.presenter.TodoPresenter;
-import com.example.mg.todo.data.model.DataModel;
+import com.example.mg.todo.utils.NoteDialog;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements ITodoContract.IView,
-        EditText.OnKeyListener, NotesRecyclerViewAdapter.OnItemLongClickListener {
+public class MainActivity extends AppCompatActivity implements ITodoContract.IView
+        , NotesRecyclerViewAdapter.OnItemLongClickListener, NoteDialog.ISendNoteObject {
 
-    @BindView(R.id.textEnter)
-    public
-    EditText textEnter;
     @BindView(R.id.todoList)
     RecyclerView todoList;
+    @BindView(R.id.floatingActionButton)
+    FloatingActionButton floatingActionButton;
 
     private TodoPresenter mPresenter;
-    SharedPreferences sharedPreferences;
     public NotesRecyclerViewAdapter notesRecyclerViewAdapter;
 
     @Override
@@ -40,12 +38,10 @@ public class MainActivity extends AppCompatActivity implements ITodoContract.IVi
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        textEnter.setOnKeyListener(this);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mPresenter = new TodoPresenter(this, sharedPreferences);
 
     }
-
 
     @Override
     public void init(List<DataModel> set) {
@@ -58,12 +54,17 @@ public class MainActivity extends AppCompatActivity implements ITodoContract.IVi
     }
 
     @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        return mPresenter.onKey(keyCode, event);
+    public boolean onItemLongClicked(int position) {
+        return mPresenter.onItemLongClick(position);
     }
 
     @Override
-    public boolean onItemLongClicked(int position) {
-        return mPresenter.onItemLongClick(position);
+    public void send(DataModel newNote) {
+        mPresenter.addNote(newNote);
+    }
+
+    @OnClick(R.id.floatingActionButton)
+    public void onViewClicked() {
+        mPresenter.openDialog();
     }
 }

@@ -57,6 +57,7 @@ public class NotesRecyclerViewAdapter
         });
 
         holder.textTitle.setText(mValues.get(position).getText());
+        holder.textDetails.setText(mValues.get(position).getDescription());
     }
 
     @Override

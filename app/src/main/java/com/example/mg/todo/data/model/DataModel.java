@@ -7,8 +7,9 @@ public class DataModel implements Parcelable {
     private String mText;
     private String mDescription;
 
-    public DataModel(String text ) {
+    public DataModel(String text , String description) {
         this.mText = text;
+        this.mDescription = description;
     }
 
     protected DataModel(Parcel in) {
