@@ -1,6 +1,6 @@
 package com.example.mg.todo.utils;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -45,10 +45,10 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
     Button btnAddImage;
 
     Unbinder unbinder;
-    private static final String TAG = "NoteDialog";
+    //private static final String TAG = "NoteDialog";
     public static final int REQUEST_CODE = 19;
     private ISendNoteObject lisISendNoteObject;
-    private Activity activity;
+    private Context activity;
     private DataModel newNote;
     String fileLocation;
 
@@ -56,7 +56,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
     }
 
     @Override
-    public void onAttach(Activity context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         this.activity = context;
         try {

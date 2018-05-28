@@ -14,7 +14,7 @@ import java.util.List;
 public class DataProvider {
     private SharedPreferences.Editor editor;
     private TodoPresenter mPresenter;
-    private final String KEY_NEW_NOTE = "NEW_NOTE5";
+    private final String KEY_NEW_NOTE = "NEW_NOTE6";
     private Gson gson = new Gson();
     private String json;
     private List<DataModel> mDataModels;

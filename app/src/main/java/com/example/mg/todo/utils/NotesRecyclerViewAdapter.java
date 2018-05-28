@@ -32,7 +32,7 @@ public class NotesRecyclerViewAdapter
     }
 
     public interface OnItemClickListener {
-        boolean onItemClicked(int position);
+        void onItemClicked(int position);
     }
 
     public void setAll(List<DataModel> values) {

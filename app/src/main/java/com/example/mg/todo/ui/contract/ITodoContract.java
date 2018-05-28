@@ -13,13 +13,14 @@ public interface ITodoContract {
 
         boolean onItemLongClick(int position);
 
+        boolean onItemClick(int position);
+
         void openDialog();
 
         void addNote(DataModel newNote);
 
         void updateRecyclerViewData(List<DataModel> newData);
 
-        boolean onItemClick(int position);
     }
 }
 

@@ -67,6 +67,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onItemClicked(int position) {
+        mPresenter.onItemClick(position);
+    }
+
+    @Override
     public void send(DataModel newNote) {
         mPresenter.addNote(newNote);
     }
@@ -76,8 +81,5 @@ public class MainActivity extends AppCompatActivity
         mPresenter.openDialog();
     }
 
-    @Override
-    public boolean onItemClicked(int position) {
-        return mPresenter.onItemClick(position);
-    }
+
 }

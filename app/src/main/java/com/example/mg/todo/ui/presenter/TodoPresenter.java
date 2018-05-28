@@ -32,7 +32,7 @@ public class TodoPresenter implements ITodoContract.IPresenter {
     //// TODO: 5/29/2018 add on click listener to edit note
     @Override
     public boolean onItemClick(int position) {
-        Toast.makeText(mView, "clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mView, "clicked"+ position, Toast.LENGTH_SHORT).show();
         return true;
     }
 
