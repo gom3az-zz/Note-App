@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.mg.todo.DataModel;
 import com.example.mg.todo.R;
+import com.example.mg.todo.data.model.DataModel;
 
 import java.util.List;
 
@@ -61,7 +61,11 @@ public class NotesRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        try {
+            return mValues.size();
+        } catch (NullPointerException ignored) {
+            return 0;
+        }
     }
 
 

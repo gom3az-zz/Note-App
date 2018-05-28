@@ -1,4 +1,4 @@
-package com.example.mg.todo;
+package com.example.mg.todo.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +10,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.mg.todo.R;
+import com.example.mg.todo.ui.contract.ITodoContract;
+import com.example.mg.todo.ui.presenter.TodoPresenter;
+import com.example.mg.todo.data.model.DataModel;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
 
 import java.util.List;
@@ -21,13 +25,14 @@ public class MainActivity extends AppCompatActivity implements ITodoContract.IVi
         EditText.OnKeyListener, NotesRecyclerViewAdapter.OnItemLongClickListener {
 
     @BindView(R.id.textEnter)
+    public
     EditText textEnter;
     @BindView(R.id.todoList)
     RecyclerView todoList;
 
     private TodoPresenter mPresenter;
     SharedPreferences sharedPreferences;
-    NotesRecyclerViewAdapter notesRecyclerViewAdapter;
+    public NotesRecyclerViewAdapter notesRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements ITodoContract.IVi
 
     @Override
     public void init(List<DataModel> set) {
-
         todoList.addItemDecoration(new DividerItemDecoration(
                 todoList.getContext(),
                 DividerItemDecoration.VERTICAL));

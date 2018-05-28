@@ -1,4 +1,4 @@
-package com.example.mg.todo;
+package com.example.mg.todo.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

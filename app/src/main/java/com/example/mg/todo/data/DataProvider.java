@@ -1,7 +1,9 @@
-package com.example.mg.todo;
+package com.example.mg.todo.data;
 
 import android.content.SharedPreferences;
 
+import com.example.mg.todo.data.model.DataModel;
+import com.example.mg.todo.ui.presenter.TodoPresenter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -9,41 +11,47 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-class DataProvider {
+public class DataProvider {
     private SharedPreferences.Editor editor;
     private TodoPresenter mPresenter;
-    private final String MyObject = "MyObject1";
+    private final String KEY_NEW_NOTE = "NEW_NOTE1";
     private Gson gson = new Gson();
     private String json;
     private List<DataModel> mDataModels;
 
-    DataProvider(SharedPreferences sharedPreferences, TodoPresenter todoPresenter) {
+    public DataProvider(SharedPreferences sharedPreferences, TodoPresenter todoPresenter) {
         editor = sharedPreferences.edit();
         mPresenter = todoPresenter;
         Type type = new TypeToken<List<DataModel>>() {
         }.getType();
 
-        json = sharedPreferences.getString(MyObject, "");
+        json = sharedPreferences.getString(KEY_NEW_NOTE, "");
         mDataModels = gson.fromJson(json, type);
 
     }
 
-    void updateDataSet() {
+    public void updateDataSet() {
         json = gson.toJson(mDataModels);
-        editor.putString(MyObject, json).apply();
+        editor.putString(KEY_NEW_NOTE, json).apply();
         mPresenter.updateRecyclerViewData(mDataModels);
     }
 
-    public void add(String s) {
-        DataModel newObj = new DataModel(s);
-        mDataModels.add(newObj);
+    public void add(String note) {
+        DataModel newObj = new DataModel(note);
+        try {
+            mDataModels.add(newObj);
+
+        } catch (NullPointerException e) {
+            mDataModels = new ArrayList<>();
+            mDataModels.add(newObj);
+        }
     }
 
-    void remove(int position) {
+    public void remove(int position) {
         mDataModels.remove(position);
     }
 
-    List<DataModel> getDataModels() {
+    public List<DataModel> getDataModels() {
         try {
             return mDataModels;
         } catch (NullPointerException ignored) {

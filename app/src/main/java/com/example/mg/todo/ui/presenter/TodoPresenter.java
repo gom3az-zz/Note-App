@@ -1,15 +1,19 @@
-package com.example.mg.todo;
+package com.example.mg.todo.ui.presenter;
 
 import android.content.SharedPreferences;
 import android.view.KeyEvent;
 
+import com.example.mg.todo.data.DataProvider;
+import com.example.mg.todo.ui.contract.ITodoContract;
+import com.example.mg.todo.data.model.DataModel;
+import com.example.mg.todo.ui.MainActivity;
 import java.util.List;
 
 public class TodoPresenter implements ITodoContract.IPresenter {
     private MainActivity mView;
     private DataProvider data;
 
-    TodoPresenter(MainActivity mView, SharedPreferences sharedPreferences) {
+    public TodoPresenter(MainActivity mView, SharedPreferences sharedPreferences) {
         this.mView = mView;
         data = new DataProvider(sharedPreferences, this);
         mView.init(data.getDataModels());

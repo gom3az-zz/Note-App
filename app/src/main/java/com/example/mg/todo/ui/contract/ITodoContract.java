@@ -1,6 +1,8 @@
-package com.example.mg.todo;
+package com.example.mg.todo.ui.contract;
 
 import android.view.KeyEvent;
+
+import com.example.mg.todo.data.model.DataModel;
 
 import java.util.List;
 
