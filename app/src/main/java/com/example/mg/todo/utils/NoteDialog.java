@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Base64;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +23,8 @@ import android.widget.Toast;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.DataModel;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -47,6 +50,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
     private ISendNoteObject lisISendNoteObject;
     private Activity activity;
     private DataModel newNote;
+    String fileLocation;
 
     public NoteDialog() {
     }
@@ -58,7 +62,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
         try {
             lisISendNoteObject = (ISendNoteObject) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement OnArticleSelectedListener");
+            throw new ClassCastException(context.toString() + " must implement send data");
         }
     }
 
@@ -94,23 +98,32 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
                 getDialog().dismiss();
             }
         } else {
-            Intent pickPhoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(pickPhoto, REQUEST_CODE);
+            Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File file = null;
+            if (i.resolveActivity(activity.getPackageManager()) != null) {
+                try {
+                    file = BitmapUtil.createTempImageFile(activity);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (file != null) {
+                    fileLocation = BitmapUtil.mCurrentPhotoPath;
+                    Uri uri = FileProvider.getUriForFile(activity, "com.example.mg.todo", file);
+                    i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    startActivityForResult(i, REQUEST_CODE);
+                }
+            }
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-
-            Toast.makeText(activity, "image added", Toast.LENGTH_SHORT).show();
-            Bundle bundle = data.getExtras();
-            Bitmap bitmap = (Bitmap) bundle.get("data");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] b = baos.toByteArray();
-            String encoded = Base64.encodeToString(b, Base64.DEFAULT);
-            newNote.setImage(encoded);
+            Bitmap bitmap = BitmapUtil.resamplePic(fileLocation);
+            BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+            editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null, null, null, bitmapDrawable);
+            newNote.setImage(BitmapUtil.encodedImage(bitmap));
         }
     }
 

@@ -12,19 +12,21 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_weight="3"
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="3"
             android:paddingBottom="8dp"
             android:textDirection="anyRtl" />
 
         <ImageView
-            android:layout_weight="1"
             android:id="@+id/imageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"/>
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 

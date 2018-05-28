@@ -18,5 +18,8 @@ public interface ITodoContract {
         void addNote(DataModel newNote);
 
         void updateRecyclerViewData(List<DataModel> newData);
+
+        boolean onItemClick(int position);
     }
 }
+

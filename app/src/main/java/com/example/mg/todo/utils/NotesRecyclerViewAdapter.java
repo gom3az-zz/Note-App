@@ -3,7 +3,6 @@ package com.example.mg.todo.utils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +22,17 @@ public class NotesRecyclerViewAdapter
         extends RecyclerView.Adapter<NotesRecyclerViewAdapter.ViewHolder> {
 
 
-    private OnItemLongClickListener listener;
+    private OnItemLongClickListener itemLongClickListener;
+    private OnItemClickListener onItemClickListener;
     private List<DataModel> mValues;
     private Context mContext;
 
     public interface OnItemLongClickListener {
         boolean onItemLongClicked(int position);
+    }
+
+    public interface OnItemClickListener {
+        boolean onItemClicked(int position);
     }
 
     public void setAll(List<DataModel> values) {
@@ -37,7 +41,8 @@ public class NotesRecyclerViewAdapter
 
 
     public NotesRecyclerViewAdapter(Context context, List<DataModel> set) {
-        listener = (OnItemLongClickListener) context;
+        itemLongClickListener = (OnItemLongClickListener) context;
+        onItemClickListener = (OnItemClickListener) context;
         mValues = set;
         mContext = context;
     }
@@ -58,7 +63,14 @@ public class NotesRecyclerViewAdapter
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                return listener.onItemLongClicked(holder.getAdapterPosition());
+                return itemLongClickListener.onItemLongClicked(holder.getAdapterPosition());
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemClickListener.onItemClicked(holder.getAdapterPosition());
             }
         });
 
@@ -68,12 +80,9 @@ public class NotesRecyclerViewAdapter
         if (mValues.get(position).getImage() == null) {
             holder.imageView.setVisibility(View.GONE);
         } else {
-            byte[] imageAsBytes = Base64.decode(mValues.get(position).getImage().getBytes(), Base64.DEFAULT);
-
             Glide.with(mContext)
-                    .load(imageAsBytes)
+                    .load(BitmapUtil.decodeImage(mValues.get(position).getImage()))
                     .into(holder.imageView);
-            // holder.imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
         }
     }
 

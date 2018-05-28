@@ -2,6 +2,7 @@ package com.example.mg.todo.ui.presenter;
 
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
+import android.widget.Toast;
 
 import com.example.mg.todo.data.DataProvider;
 import com.example.mg.todo.data.model.DataModel;
@@ -28,11 +29,19 @@ public class TodoPresenter implements ITodoContract.IPresenter {
         return true;
     }
 
+    //// TODO: 5/29/2018 add on click listener to edit note
+    @Override
+    public boolean onItemClick(int position) {
+        Toast.makeText(mView, "clicked", Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
     @Override
     public void updateRecyclerViewData(List<DataModel> newData) {
         mView.notesRecyclerViewAdapter.setAll(newData);
         mView.notesRecyclerViewAdapter.notifyDataSetChanged();
     }
+
 
     @Override
     public void openDialog() {

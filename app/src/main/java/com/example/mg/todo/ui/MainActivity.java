@@ -22,8 +22,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements ITodoContract.IView
-        , NotesRecyclerViewAdapter.OnItemLongClickListener, NoteDialog.ISendNoteObject {
+public class MainActivity extends AppCompatActivity
+        implements ITodoContract.IView,
+        NotesRecyclerViewAdapter.OnItemLongClickListener,
+        NotesRecyclerViewAdapter.OnItemClickListener,
+        NoteDialog.ISendNoteObject {
 
     @BindView(R.id.todoList)
     RecyclerView todoList;
@@ -71,5 +74,10 @@ public class MainActivity extends AppCompatActivity implements ITodoContract.IVi
     @OnClick(R.id.floatingActionButton)
     public void onViewClicked() {
         mPresenter.openDialog();
+    }
+
+    @Override
+    public boolean onItemClicked(int position) {
+        return mPresenter.onItemClick(position);
     }
 }
