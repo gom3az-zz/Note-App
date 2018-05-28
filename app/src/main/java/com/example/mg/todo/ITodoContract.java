@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ITodoContract {
     interface IView {
-        void init(List<String> set);
+        void init(List<DataModel> set);
     }
 
     interface IPresenter {
@@ -15,6 +15,6 @@ public interface ITodoContract {
 
         boolean onKey(int keyCode, KeyEvent event);
 
-        void updateRecyclerViewData(List<String> newData);
+        void updateRecyclerViewData(List<DataModel> newData);
     }
 }

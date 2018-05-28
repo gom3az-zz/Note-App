@@ -12,13 +12,13 @@ public class TodoPresenter implements ITodoContract.IPresenter {
     TodoPresenter(MainActivity mView, SharedPreferences sharedPreferences) {
         this.mView = mView;
         data = new DataProvider(sharedPreferences, this);
-        mView.init(data.set);
+        mView.init(data.getDataModels());
 
     }
 
     @Override
     public boolean onItemLongClick(int position) {
-        data.set.remove(position);
+        data.remove(position);
         data.updateDataSet();
         return true;
     }
@@ -29,7 +29,7 @@ public class TodoPresenter implements ITodoContract.IPresenter {
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_CENTER:
                 case KeyEvent.KEYCODE_ENTER:
-                    data.set.add(mView.textEnter.getText().toString());
+                    data.add(mView.textEnter.getText().toString());
                     data.updateDataSet();
                     mView.textEnter.setText("");
                     return true;
@@ -41,7 +41,7 @@ public class TodoPresenter implements ITodoContract.IPresenter {
     }
 
     @Override
-    public void updateRecyclerViewData(List<String> newData) {
+    public void updateRecyclerViewData(List<DataModel> newData) {
         mView.notesRecyclerViewAdapter.setAll(newData);
         mView.notesRecyclerViewAdapter.notifyDataSetChanged();
     }

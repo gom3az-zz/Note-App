@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mg.todo.DataModel;
 import com.example.mg.todo.R;
 
 import java.util.List;
@@ -19,18 +20,18 @@ public class NotesRecyclerViewAdapter
         extends RecyclerView.Adapter<NotesRecyclerViewAdapter.ViewHolder> {
 
     private OnItemLongClickListener listener;
-    private List<String> mValues;
+    private List<DataModel> mValues;
 
     public interface OnItemLongClickListener {
         boolean onItemLongClicked(int position);
     }
 
-    public void setAll(List<String> values) {
+    public void setAll(List<DataModel> values) {
         mValues = values;
     }
 
 
-    public NotesRecyclerViewAdapter(Context context, List<String> set) {
+    public NotesRecyclerViewAdapter(Context context, List<DataModel> set) {
         listener = (OnItemLongClickListener) context;
         mValues = set;
     }
@@ -55,8 +56,7 @@ public class NotesRecyclerViewAdapter
             }
         });
 
-        holder.textTitle.setText(mValues.get(position));
-        holder.textDetails.setText("");
+        holder.textTitle.setText(mValues.get(position).getText());
     }
 
     @Override

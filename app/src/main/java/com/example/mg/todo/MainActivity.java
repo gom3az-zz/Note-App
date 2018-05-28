@@ -1,8 +1,8 @@
 package com.example.mg.todo;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
@@ -34,17 +34,16 @@ public class MainActivity extends AppCompatActivity implements ITodoContract.IVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
 
         textEnter.setOnKeyListener(this);
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mPresenter = new TodoPresenter(this, sharedPreferences);
 
     }
 
 
     @Override
-    public void init(List<String> set) {
+    public void init(List<DataModel> set) {
 
         todoList.addItemDecoration(new DividerItemDecoration(
                 todoList.getContext(),
