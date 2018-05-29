@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    // init home recycler view with data saved at shared pref
     @Override
     public void init(List<DataModel> set) {
         todoList.addItemDecoration(new DividerItemDecoration(
@@ -72,13 +73,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void send(DataModel newNote) {
-        mPresenter.addNote(newNote);
+    public void send(DataModel newNote, int mUpdated) {
+        mPresenter.addNote(newNote, mUpdated);
     }
 
     @OnClick(R.id.floatingActionButton)
     public void onViewClicked() {
-        mPresenter.openDialog();
+        // null , -1 are passed to create new note object
+        mPresenter.openDialog(null, -1);
     }
 
 

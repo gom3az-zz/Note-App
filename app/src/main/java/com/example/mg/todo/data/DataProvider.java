@@ -20,6 +20,8 @@ public class DataProvider {
     private List<DataModel> mDataModels;
 
     // TODO: 5/28/2018 change shared pref data storage to sqlite
+    // storing array of object as a string into shared pref
+    //
     public DataProvider(SharedPreferences sharedPreferences, TodoPresenter todoPresenter) {
         editor = sharedPreferences.edit();
         mPresenter = todoPresenter;
@@ -42,21 +44,29 @@ public class DataProvider {
         mDataModels.remove(position);
     }
 
+    // if mUpdated is -1 then it means its a new object
+    // if not then it adds the updated note to its same location
+    public void addNote(DataModel newNote, int mUpdated) {
+        try {
+            if (mUpdated != -1) {
+                mDataModels.add(mUpdated, newNote);
+            } else mDataModels.add(newNote);
+
+        } catch (NullPointerException e) {
+            mDataModels = new ArrayList<>();
+            mDataModels.add(newNote);
+        }
+    }
+
+    public DataModel getNote(int position) {
+        return mDataModels.get(position);
+    }
+
     public List<DataModel> getDataModels() {
         try {
             return mDataModels;
         } catch (NullPointerException ignored) {
             return new ArrayList<>(0);
-        }
-    }
-
-    public void addNote(DataModel newNote) {
-        try {
-            mDataModels.add(newNote);
-
-        } catch (NullPointerException e) {
-            mDataModels = new ArrayList<>();
-            mDataModels.add(newNote);
         }
     }
 }

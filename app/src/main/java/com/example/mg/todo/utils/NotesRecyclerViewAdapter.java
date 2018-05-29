@@ -77,9 +77,13 @@ public class NotesRecyclerViewAdapter
         holder.textTitle.setText(String.format("%s\n%s",
                 mValues.get(position).getText(),
                 mValues.get(position).getDescription()));
+        // hiding imageview if the note doesnt have a image
+        // setting visibility to visible again if the user updates a non having image note
+        // because we already bound the view of this note to gone
         if (mValues.get(position).getImage() == null) {
             holder.imageView.setVisibility(View.GONE);
         } else {
+            holder.imageView.setVisibility(View.VISIBLE);
             Glide.with(mContext)
                     .load(BitmapUtil.decodeImage(mValues.get(position).getImage()))
                     .into(holder.imageView);

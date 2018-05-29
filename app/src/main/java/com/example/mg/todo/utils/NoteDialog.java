@@ -3,6 +3,7 @@ package com.example.mg.todo.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -47,20 +48,22 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
     Unbinder unbinder;
     //private static final String TAG = "NoteDialog";
     public static final int REQUEST_CODE = 19;
-    private ISendNoteObject lisISendNoteObject;
-    private Context activity;
-    private DataModel newNote;
-    String fileLocation;
+    private ISendNoteObject mSendNote;
+    private Context mActivity;
+    private DataModel mNote;
+    private String mFileLocation;
+    private int mUpdated = -1;
 
     public NoteDialog() {
     }
 
     @Override
     public void onAttach(Context context) {
+        // casting send note object to parent activity to call its method
         super.onAttach(context);
-        this.activity = context;
+        this.mActivity = context;
         try {
-            lisISendNoteObject = (ISendNoteObject) context;
+            mSendNote = (ISendNoteObject) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement send data");
         }
@@ -73,61 +76,92 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
         unbinder = ButterKnife.bind(this, v);
         btnDone.setOnClickListener(this);
         btnAddImage.setOnClickListener(this);
+
+        // if user clicked on a note to update it it calls this function to update the ui of the fragment
+        // else it init a new note object
+        if (mNote != null) {
+            initDialogWithNoteData();
+        } else mNote = new DataModel();
         return v;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        newNote = new DataModel();
         Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override
     public void onClick(View view) {
+        // if user clicked done button
+        // gets user entered data and add it into note object
+        // then send it to to presenter through main activity to handle it
+        // else user clicked add image button
+        // opens a media store broker to take image
         if (view.getId() == R.id.btn_done) {
             String title = editTextTitle.getText().toString();
             String description = editTextDescription.getText().toString();
             if (title.equals("") || description.equals("")) {
-                Toast.makeText(activity, "check entries!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "check entries!", Toast.LENGTH_SHORT).show();
             } else {
-                newNote.setText(title);
-                newNote.setDescription(description);
-                lisISendNoteObject.send(newNote);
+                mNote.setText(title);
+                mNote.setDescription(description);
+                mSendNote.send(mNote, mUpdated);
                 getDialog().dismiss();
             }
         } else {
-            Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File file = null;
-            if (i.resolveActivity(activity.getPackageManager()) != null) {
-                try {
-                    file = BitmapUtil.createTempImageFile(activity);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (file != null) {
-                    fileLocation = BitmapUtil.mCurrentPhotoPath;
-                    Uri uri = FileProvider.getUriForFile(activity, "com.example.mg.todo", file);
-                    i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                    startActivityForResult(i, REQUEST_CODE);
-                }
+            try {
+                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File file = BitmapUtil.createTempImageFile(mActivity);
+                mFileLocation = BitmapUtil.mCurrentPhotoPath;
+                Uri uri = FileProvider.getUriForFile(mActivity, "com.example.mg.todo", file);
+                i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                startActivityForResult(i, REQUEST_CODE);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
 
+    // get user taken image and puts it into description edittext
+    // then add to note object
+    // compress  bitmap to byte array using bitmap CompressFormat
+    // then encode it to base 64 to store it as a string into the database
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            Bitmap bitmap = BitmapUtil.resamplePic(fileLocation);
-            BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
-            editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null, null, null, bitmapDrawable);
-            newNote.setImage(BitmapUtil.encodedImage(bitmap));
+            Bitmap bitmap = BitmapUtil.resamplePic(mFileLocation);
+            editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
+                    null,
+                    null,
+                    new BitmapDrawable(getResources(), bitmap));
+            mNote.setImage(BitmapUtil.encodedImage(bitmap));
         }
     }
 
+    //update the ui of the fragment to the opened note by user
+    // transforming bitmap into drawable to display it on edittext
+    private void initDialogWithNoteData() {
+        editTextTitle.setText(mNote.getText());
+        editTextDescription.setText(mNote.getDescription());
+        if (mNote.getImage() != null) {
+            byte[] bytes = BitmapUtil.decodeImage(mNote.getImage());
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
+                    null,
+                    null,
+                    new BitmapDrawable(getResources(), bitmap));
+        }
+    }
+
+    public void setModel(DataModel model, int position) {
+        this.mNote = model;
+        mUpdated = position;
+    }
+
     public interface ISendNoteObject {
-        void send(DataModel newNote);
+        void send(DataModel newNote, int mUpdated);
     }
 }

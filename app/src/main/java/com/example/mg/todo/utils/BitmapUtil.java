@@ -27,7 +27,6 @@ class BitmapUtil {
         return Base64.decode(mString.getBytes(), Base64.DEFAULT);
 
     }
-
     static File createTempImageFile(Context context) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 

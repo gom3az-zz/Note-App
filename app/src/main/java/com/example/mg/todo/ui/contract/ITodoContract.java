@@ -15,9 +15,9 @@ public interface ITodoContract {
 
         boolean onItemClick(int position);
 
-        void openDialog();
+        void openDialog(DataModel note, int position);
 
-        void addNote(DataModel newNote);
+        void addNote(DataModel newNote, int mUpdated);
 
         void updateRecyclerViewData(List<DataModel> newData);
 
