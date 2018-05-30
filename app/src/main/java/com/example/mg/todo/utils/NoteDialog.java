@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.mg.todo.R;
-import com.example.mg.todo.data.model.DataModel;
+import com.example.mg.todo.data.model.NoteModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,7 @@ import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
 
-public class NoteDialog extends android.support.v4.app.DialogFragment implements View.OnClickListener {
+public class NoteDialog extends android.support.v4.app.DialogFragment implements View.OnClickListener, View.OnKeyListener {
 
     @BindView(R.id.edit_text_title)
     EditText editTextTitle;
@@ -50,7 +51,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
     public static final int REQUEST_CODE = 19;
     private ISendNoteObject mSendNote;
     private Context mActivity;
-    private DataModel mNote;
+    private NoteModel mNote;
     private String mFileLocation;
     private int mUpdated = -1;
 
@@ -76,12 +77,12 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
         unbinder = ButterKnife.bind(this, v);
         btnDone.setOnClickListener(this);
         btnAddImage.setOnClickListener(this);
-
+        editTextDescription.setOnKeyListener(this);
         // if user clicked on a note to update it it calls this function to update the ui of the fragment
         // else it init a new note object
         if (mNote != null) {
             initDialogWithNoteData();
-        } else mNote = new DataModel();
+        } else mNote = new NoteModel();
         return v;
     }
 
@@ -101,28 +102,23 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
         // else user clicked add image button
         // opens a media store broker to take image
         if (view.getId() == R.id.btn_done) {
-            String title = editTextTitle.getText().toString();
-            String description = editTextDescription.getText().toString();
-            if (title.equals("") || description.equals("")) {
-                Toast.makeText(mActivity, "check entries!", Toast.LENGTH_SHORT).show();
-            } else {
-                mNote.setText(title);
-                mNote.setDescription(description);
-                mSendNote.send(mNote, mUpdated);
-                getDialog().dismiss();
-            }
+            addNoteCheck();
+
         } else {
-            try {
-                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file = BitmapUtil.createTempImageFile(mActivity);
-                mFileLocation = BitmapUtil.mCurrentPhotoPath;
-                Uri uri = FileProvider.getUriForFile(mActivity, "com.example.mg.todo", file);
-                i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                startActivityForResult(i, REQUEST_CODE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            startIntentToTakePicture();
         }
+    }
+
+
+    @Override
+    public boolean onKey(View view, int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN)
+            if ((keyCode == KeyEvent.KEYCODE_DPAD_CENTER) ||
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                addNoteCheck();
+                return true;
+            }
+        return false;
     }
 
     // get user taken image and puts it into description edittext
@@ -156,12 +152,39 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
         }
     }
 
-    public void setModel(DataModel model, int position) {
+    private void addNoteCheck() {
+        String title = editTextTitle.getText().toString();
+        String description = editTextDescription.getText().toString();
+        if (title.equals("") || description.equals("")) {
+            Toast.makeText(mActivity, "check entries!", Toast.LENGTH_SHORT).show();
+        } else {
+            mNote.setText(title);
+            mNote.setDescription(description);
+            mSendNote.send(mNote, mUpdated);
+            getDialog().dismiss();
+        }
+    }
+
+    private void startIntentToTakePicture() {
+        try {
+            Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File file = BitmapUtil.createTempImageFile(mActivity);
+            mFileLocation = BitmapUtil.mCurrentPhotoPath;
+            Uri uri = FileProvider.getUriForFile(mActivity, "com.example.mg.todo", file);
+            i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(i, REQUEST_CODE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setModel(NoteModel model, int position) {
         this.mNote = model;
         mUpdated = position;
     }
 
+
     public interface ISendNoteObject {
-        void send(DataModel newNote, int mUpdated);
+        void send(NoteModel newNote, int mUpdated);
     }
 }

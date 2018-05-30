@@ -1,36 +1,35 @@
 package com.example.mg.todo.data.model;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class DataModel implements Parcelable {
+public class NoteModel implements Parcelable {
     private String mText;
     private String mDescription;
     private String mImage;
 
-    public DataModel() {
+    public static final Creator<NoteModel> CREATOR = new Creator<NoteModel>() {
+        @Override
+        public NoteModel createFromParcel(Parcel in) {
+            return new NoteModel(in);
+        }
+
+        @Override
+        public NoteModel[] newArray(int size) {
+            return new NoteModel[size];
+        }
+    };
+
+    public NoteModel() {
 
     }
 
-    private DataModel(Parcel in) {
+    private NoteModel(Parcel in) {
         mText = in.readString();
         mDescription = in.readString();
         mImage = in.readString();
 
     }
-
-    public static final Creator<DataModel> CREATOR = new Creator<DataModel>() {
-        @Override
-        public DataModel createFromParcel(Parcel in) {
-            return new DataModel(in);
-        }
-
-        @Override
-        public DataModel[] newArray(int size) {
-            return new DataModel[size];
-        }
-    };
 
     public String getText() {
         return mText;

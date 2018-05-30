@@ -10,7 +10,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.mg.todo.R;
-import com.example.mg.todo.data.model.DataModel;
+import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.ui.contract.ITodoContract;
 import com.example.mg.todo.ui.presenter.TodoPresenter;
 import com.example.mg.todo.utils.NoteDialog;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
 
     // init home recycler view with data saved at shared pref
     @Override
-    public void init(List<DataModel> set) {
+    public void init(List<NoteModel> set) {
         todoList.addItemDecoration(new DividerItemDecoration(
                 todoList.getContext(),
                 DividerItemDecoration.VERTICAL));
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void send(DataModel newNote, int mUpdated) {
+    public void send(NoteModel newNote, int mUpdated) {
         mPresenter.addNote(newNote, mUpdated);
     }
 

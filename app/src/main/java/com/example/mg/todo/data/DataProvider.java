@@ -2,7 +2,7 @@ package com.example.mg.todo.data;
 
 import android.content.SharedPreferences;
 
-import com.example.mg.todo.data.model.DataModel;
+import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.ui.presenter.TodoPresenter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -17,7 +17,7 @@ public class DataProvider {
     private final String KEY_NEW_NOTE = "NEW_NOTE6";
     private Gson gson = new Gson();
     private String json;
-    private List<DataModel> mDataModels;
+    private List<NoteModel> mNoteModels;
 
     // TODO: 5/28/2018 change shared pref data storage to sqlite
     // storing array of object as a string into shared pref
@@ -25,46 +25,46 @@ public class DataProvider {
     public DataProvider(SharedPreferences sharedPreferences, TodoPresenter todoPresenter) {
         editor = sharedPreferences.edit();
         mPresenter = todoPresenter;
-        Type type = new TypeToken<List<DataModel>>() {
+        Type type = new TypeToken<List<NoteModel>>() {
         }.getType();
 
         json = sharedPreferences.getString(KEY_NEW_NOTE, "");
-        mDataModels = gson.fromJson(json, type);
+        mNoteModels = gson.fromJson(json, type);
 
     }
 
     public void updateDataSet() {
-        json = gson.toJson(mDataModels);
+        json = gson.toJson(mNoteModels);
         editor.putString(KEY_NEW_NOTE, json).apply();
-        mPresenter.updateRecyclerViewData(mDataModels);
+        mPresenter.updateRecyclerViewData(mNoteModels);
 
     }
 
     public void remove(int position) {
-        mDataModels.remove(position);
+        mNoteModels.remove(position);
     }
 
     // if mUpdated is -1 then it means its a new object
     // if not then it adds the updated note to its same location
-    public void addNote(DataModel newNote, int mUpdated) {
+    public void addNote(NoteModel newNote, int mUpdated) {
         try {
             if (mUpdated != -1) {
-                mDataModels.add(mUpdated, newNote);
-            } else mDataModels.add(newNote);
+                mNoteModels.add(mUpdated, newNote);
+            } else mNoteModels.add(newNote);
 
         } catch (NullPointerException e) {
-            mDataModels = new ArrayList<>();
-            mDataModels.add(newNote);
+            mNoteModels = new ArrayList<>();
+            mNoteModels.add(newNote);
         }
     }
 
-    public DataModel getNote(int position) {
-        return mDataModels.get(position);
+    public NoteModel getNote(int position) {
+        return mNoteModels.get(position);
     }
 
-    public List<DataModel> getDataModels() {
+    public List<NoteModel> getDataModels() {
         try {
-            return mDataModels;
+            return mNoteModels;
         } catch (NullPointerException ignored) {
             return new ArrayList<>(0);
         }

@@ -11,9 +11,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mg.todo.R;
-import com.example.mg.todo.data.model.DataModel;
+import com.example.mg.todo.data.model.NoteModel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +27,7 @@ public class NotesRecyclerViewAdapter
 
     private OnItemLongClickListener itemLongClickListener;
     private OnItemClickListener onItemClickListener;
-    private List<DataModel> mValues;
+    private List<NoteModel> mValues;
     private Context mContext;
 
     public interface OnItemLongClickListener {
@@ -35,16 +38,15 @@ public class NotesRecyclerViewAdapter
         void onItemClicked(int position);
     }
 
-    public void setAll(List<DataModel> values) {
-        mValues = values;
-    }
-
-
-    public NotesRecyclerViewAdapter(Context context, List<DataModel> set) {
+    public NotesRecyclerViewAdapter(Context context, List<NoteModel> set) {
         itemLongClickListener = (OnItemLongClickListener) context;
         onItemClickListener = (OnItemClickListener) context;
         mValues = set;
         mContext = context;
+    }
+
+    public void setAll(List<NoteModel> values) {
+        mValues = values;
     }
 
     @NonNull
@@ -74,9 +76,10 @@ public class NotesRecyclerViewAdapter
             }
         });
 
-        holder.textTitle.setText(String.format("%s\n%s",
+        holder.textTitle.setText(String.format("%s\n%s\n\n\n%s",
                 mValues.get(position).getText(),
-                mValues.get(position).getDescription()));
+                mValues.get(position).getDescription(),
+                new SimpleDateFormat("EEE, MMM d, ''yy hh:mm aaa", Locale.ENGLISH).format(new Date())));
         // hiding imageview if the note doesnt have a image
         // setting visibility to visible again if the user updates a non having image note
         // because we already bound the view of this note to gone

@@ -56,7 +56,7 @@ class BitmapUtil {
                 0,
                 scaledBitmap.getWidth(),
                 scaledBitmap.getHeight(),
-                matrix,
+                null,
                 true);
     }
 }

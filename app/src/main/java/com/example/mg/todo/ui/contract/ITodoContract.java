@@ -1,12 +1,12 @@
 package com.example.mg.todo.ui.contract;
 
-import com.example.mg.todo.data.model.DataModel;
+import com.example.mg.todo.data.model.NoteModel;
 
 import java.util.List;
 
 public interface ITodoContract {
     interface IView {
-        void init(List<DataModel> set);
+        void init(List<NoteModel> set);
     }
 
     interface IPresenter {
@@ -15,11 +15,11 @@ public interface ITodoContract {
 
         boolean onItemClick(int position);
 
-        void openDialog(DataModel note, int position);
+        void openDialog(NoteModel note, int position);
 
-        void addNote(DataModel newNote, int mUpdated);
+        void addNote(NoteModel newNote, int mUpdated);
 
-        void updateRecyclerViewData(List<DataModel> newData);
+        void updateRecyclerViewData(List<NoteModel> newData);
 
     }
 }
