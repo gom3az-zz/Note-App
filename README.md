@@ -7,12 +7,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-recyclerview
-cardview
-gson
-butterknife
-glide
-leakcanary
+* [recyclerview](https://developer.android.com/guide/topics/ui/layout/recyclerview)
+* [cardview](https://developer.android.com/guide/topics/ui/layout/cardview)
+* [gson](https://github.com/google/gson)
+* [butterknife](http://jakewharton.github.io/butterknife/)
+* [glide](https://github.com/bumptech/glide)
+* [leakcanary](https://github.com/square/leakcanary)
 
 ## Authors
 
