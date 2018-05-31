@@ -17,7 +17,7 @@ These instructions will get you a copy of the project up and running on your loc
 ## Authors
 
 * **Mohamed gomaa** - [gom3az](https://github.com/gom3az)
-* **ibrahim salah** - [IbrahemSalah](https://github.com/IbrahemSalah/BakingApp)
+* **ibrahim salah** - [IbrahemSalah](https://github.com/IbrahemSalah)
 
 ## Screenshots
 <div align="center">
