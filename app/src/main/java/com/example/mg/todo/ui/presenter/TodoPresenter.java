@@ -71,7 +71,6 @@ public class TodoPresenter implements ITodoContract.IPresenter {
                 .add(noteDialog.getId(), noteDialog, NoteDialog.class.getName())
                 .commit();
     }
-
     // called when user clicks done button from fragment
     // parameter mUpdated refers to location of the updated note
     // if it equals to -1 then it means its a new note else its an updated note

@@ -237,7 +237,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
         PopupMenu popup = new PopupMenu(v.getContext(), v);
         //Inflating the Popup using xml file
         popup.getMenuInflater()
-                .inflate(R.menu.poupup_menu, popup.getMenu());
+                .inflate(R.menu.popup_menu, popup.getMenu());
 
         //deletes image if user clicked delete button from menu
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
