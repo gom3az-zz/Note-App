@@ -21,4 +21,6 @@ These instructions will get you a copy of the project up and running on your loc
 ## Screenshots
 <div align="center">
     <img src="/ss1.png" width="400px"</img> 
+    <img src="/ss2.png" width="400px"</img> 
+    <img src="/ss3.png" width="400px"</img> 
 </div>
