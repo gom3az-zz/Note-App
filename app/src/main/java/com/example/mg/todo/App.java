@@ -1,9 +1,14 @@
 package com.example.mg.todo;
 
 import android.app.Application;
+import android.content.Context;
+
+import com.facebook.stetho.Stetho;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 public class App extends Application {
-  /*  private RefWatcher mRefWatcher;
+    private RefWatcher mRefWatcher;
 
     public static RefWatcher getRefWatcher(Context context) {
         App application = (App) context.getApplicationContext();
@@ -22,5 +27,5 @@ public class App extends Application {
             return;
         }
         mRefWatcher = LeakCanary.install(this);
-    }*/
+    }
 }

@@ -13,9 +13,9 @@ public interface ITodoContract {
 
         boolean onItemLongClick(int position);
 
-        boolean onItemClick(int position);
+        void onItemClick(int position);
 
-        void openDialog(NoteModel note, int position);
+        void noteDialog(NoteModel note, int position);
 
         void addNote(NoteModel newNote, int mUpdated);
 

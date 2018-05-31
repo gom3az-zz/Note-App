@@ -9,12 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.mg.todo.App;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.ui.contract.ITodoContract;
 import com.example.mg.todo.ui.presenter.TodoPresenter;
 import com.example.mg.todo.utils.NoteDialog;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
+import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,14 +51,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         mPresenter.init();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
-        menuItem = menu.findItem(R.id.delete);
-        return true;
+        if (menuItem != null) menuItem.setVisible(false);
     }
 
     @Override
@@ -68,8 +63,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-      /*  RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
-        refWatcher.watch(this);*/
+        RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
+        refWatcher.watch(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
+        menuItem = menu.findItem(R.id.delete);
+        return true;
     }
 
     @Override
@@ -78,19 +81,18 @@ public class MainActivity extends AppCompatActivity
             case R.id.delete:
                 mPresenter.removeNotes();
                 break;
-
         }
         return true;
     }
 
     @Override
-    public boolean onItemLongClicked(int position) {
-        return mPresenter.onItemLongClick(position);
+    public void onItemClicked(int position) {
+        mPresenter.onItemClick(position);
     }
 
     @Override
-    public void onItemClicked(int position) {
-        mPresenter.onItemClick(position);
+    public boolean onItemLongClicked(int position) {
+        return mPresenter.onItemLongClick(position);
     }
 
     @Override
@@ -101,6 +103,6 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.floatingActionButton)
     public void onViewClicked() {
         // null , -1 are passed to create new note object
-        mPresenter.openDialog(null, -1);
+        mPresenter.noteDialog(null, -1);
     }
 }

@@ -41,10 +41,9 @@ public class TodoPresenter implements ITodoContract.IPresenter {
 
     //// TODO: 5/29/2018 update on click listener to edit note with more stuff
     @Override
-    public boolean onItemClick(int position) {
+    public void onItemClick(int position) {
         NoteModel note = data.getNote(position);
-        openDialog(note, position);
-        return true;
+        noteDialog(note, position);
     }
 
     @Override
@@ -58,12 +57,11 @@ public class TodoPresenter implements ITodoContract.IPresenter {
         // init home recycler view with data saved at shared pref
         notesRecyclerViewAdapter = new NotesRecyclerViewAdapter(mView, data.getDataModels());
         mView.todoList.setAdapter(notesRecyclerViewAdapter);
+        if (mSelectedNotes != null) mSelectedNotes.clear();
     }
 
     @Override
-    public void openDialog(NoteModel note, int position) {
-        mView.menuItem.setVisible(false);
-        if (mSelectedNotes != null) mSelectedNotes.clear();
+    public void noteDialog(NoteModel note, int position) {
         FragmentManager fm = mView.getSupportFragmentManager();
         NoteDialog noteDialog = new NoteDialog();
         noteDialog.setModel(note, position);
@@ -71,6 +69,7 @@ public class TodoPresenter implements ITodoContract.IPresenter {
                 .add(noteDialog.getId(), noteDialog, NoteDialog.class.getName())
                 .commit();
     }
+
     // called when user clicks done button from fragment
     // parameter mUpdated refers to location of the updated note
     // if it equals to -1 then it means its a new note else its an updated note
@@ -80,6 +79,9 @@ public class TodoPresenter implements ITodoContract.IPresenter {
         if (mUpdated != -1) data.remove(mUpdated);
         data.addNote(newNote, mUpdated);
         data.updateDataSet();
+        mView.menuItem.setVisible(false);
+        if (mSelectedNotes != null) mSelectedNotes.clear();
+
     }
 
     public void removeNotes() {

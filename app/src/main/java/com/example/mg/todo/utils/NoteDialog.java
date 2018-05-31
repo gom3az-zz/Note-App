@@ -163,7 +163,6 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
 
     }
 
-
     //update the ui of the fragment to the opened note by user
     // transforming mBitmap into drawable to display it on edittext
     private void initDialogWithNoteData() {
