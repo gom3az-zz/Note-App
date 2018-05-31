@@ -8,8 +8,8 @@
     android:orientation="vertical"
     tools:context="com.example.mg.todo.ui.MainActivity">
 
-
     <android.support.v7.widget.RecyclerView
+        android:background="@color/lightColor"
         android:id="@+id/todoList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

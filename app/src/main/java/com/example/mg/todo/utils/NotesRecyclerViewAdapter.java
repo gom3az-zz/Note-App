@@ -13,10 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,7 +76,7 @@ public class NotesRecyclerViewAdapter
         holder.textTitle.setText(String.format("%s\n%s\n\n\n%s",
                 mValues.get(position).getText(),
                 mValues.get(position).getDescription(),
-                new SimpleDateFormat("EEE, MMM d, ''yy hh:mm aaa", Locale.getDefault()).format(new Date())));
+                mValues.get(position).getmDate()));
         // hiding image view if the note doesn't have a image
         // setting visibility to visible again if the user updates a non having image note
         // because we already bound the view of this note to gone

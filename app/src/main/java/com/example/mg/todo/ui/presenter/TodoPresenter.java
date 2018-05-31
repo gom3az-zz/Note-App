@@ -8,17 +8,18 @@ import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.ui.MainActivity;
 import com.example.mg.todo.ui.contract.ITodoContract;
 import com.example.mg.todo.utils.NoteDialog;
+import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
 
 import java.util.List;
 
 public class TodoPresenter implements ITodoContract.IPresenter {
     private MainActivity mView;
     private DataProvider data;
+    private NotesRecyclerViewAdapter notesRecyclerViewAdapter;
 
     public TodoPresenter(MainActivity mView, SharedPreferences sharedPreferences) {
         this.mView = mView;
         data = new DataProvider(sharedPreferences, this);
-        mView.init(data.getDataModels());
     }
 
     @Override
@@ -38,8 +39,15 @@ public class TodoPresenter implements ITodoContract.IPresenter {
 
     @Override
     public void updateRecyclerViewData(List<NoteModel> newData) {
-        mView.notesRecyclerViewAdapter.setAll(newData);
-        mView.notesRecyclerViewAdapter.notifyDataSetChanged();
+        notesRecyclerViewAdapter.setAll(newData);
+        notesRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void init() {
+        // init home recycler view with data saved at shared pref
+        notesRecyclerViewAdapter = new NotesRecyclerViewAdapter(mView, data.getDataModels());
+        mView.todoList.setAdapter(notesRecyclerViewAdapter);
     }
 
     @Override

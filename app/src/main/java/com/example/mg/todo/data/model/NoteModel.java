@@ -7,6 +7,7 @@ public class NoteModel implements Parcelable {
     private String mText;
     private String mDescription;
     private String mImage;
+    private String mDate;
 
     public static final Creator<NoteModel> CREATOR = new Creator<NoteModel>() {
         @Override
@@ -28,6 +29,7 @@ public class NoteModel implements Parcelable {
         mText = in.readString();
         mDescription = in.readString();
         mImage = in.readString();
+        mDate = in.readString();
 
     }
 
@@ -55,6 +57,13 @@ public class NoteModel implements Parcelable {
         this.mImage = mImage;
     }
 
+    public String getmDate() {
+        return mDate;
+    }
+
+    public void setmDate(String mDate) {
+        this.mDate = mDate;
+    }
 
     @Override
     public int describeContents() {
@@ -66,6 +75,8 @@ public class NoteModel implements Parcelable {
         parcel.writeString(mText);
         parcel.writeString(mDescription);
         parcel.writeString(mImage);
+        parcel.writeString(mDate);
     }
+
 
 }

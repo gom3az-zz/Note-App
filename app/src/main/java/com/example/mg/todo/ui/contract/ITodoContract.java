@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ITodoContract {
     interface IView {
-        void init(List<NoteModel> set);
+        //void init(List<NoteModel> set);
     }
 
     interface IPresenter {
@@ -21,6 +21,7 @@ public interface ITodoContract {
 
         void updateRecyclerViewData(List<NoteModel> newData);
 
+        void init();
     }
 }
 

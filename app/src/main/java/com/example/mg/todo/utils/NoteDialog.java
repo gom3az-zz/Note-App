@@ -30,6 +30,9 @@ import com.example.mg.todo.data.model.NoteModel;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -39,9 +42,9 @@ import butterknife.Unbinder;
 import static android.app.Activity.RESULT_OK;
 
 public class NoteDialog extends android.support.v4.app.DialogFragment
-        implements View.OnClickListener,
-        View.OnKeyListener,
-        View.OnTouchListener {
+        implements Button.OnClickListener,
+        EditText.OnKeyListener,
+        EditText.OnTouchListener {
 
     @BindView(R.id.edit_text_title)
     EditText editTextTitle;
@@ -60,6 +63,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
     private NoteModel mNote;
     private String mFileLocation;
     private int mUpdated = -1;
+    private Bitmap mBitmap;
 
     public NoteDialog() {
     }
@@ -106,6 +110,12 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mBitmap != null) mBitmap.recycle();
+    }
+
+    @Override
     public void onClick(View view) {
         // if user clicked done button
         // gets user entered data and add it into note object
@@ -133,6 +143,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+
         // bottom drawable is at index 3 of edittext drawables
         final int DRAWABLE_BOTTOM = 3;
         // note image click listener
@@ -148,35 +159,19 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
 
     }
 
-    // get user taken image and puts it into description edittext
-    // then add to note object
-    // compress  bitmap to byte array using bitmap CompressFormat
-    // then encode it to base 64 to store it as a string into the database
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            Bitmap bitmap = BitmapUtil.resamplePic(mFileLocation);
-            editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
-                    null,
-                    null,
-                    new BitmapDrawable(getResources(), bitmap));
-            mNote.setImage(BitmapUtil.encodedImage(bitmap));
-            editTextDescription.setOnTouchListener(this);
-        }
-    }
 
     //update the ui of the fragment to the opened note by user
-    // transforming bitmap into drawable to display it on edittext
+    // transforming mBitmap into drawable to display it on edittext
     private void initDialogWithNoteData() {
         editTextTitle.setText(mNote.getText());
         editTextDescription.setText(mNote.getDescription());
         if (mNote.getImage() != null) {
             byte[] bytes = BitmapUtil.decodeImage(mNote.getImage());
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            mBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
                     null,
                     null,
-                    new BitmapDrawable(getResources(), bitmap));
+                    new BitmapDrawable(getResources(), mBitmap));
             editTextDescription.setOnTouchListener(this);
         }
     }
@@ -189,6 +184,17 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
         } else {
             mNote.setText(title);
             mNote.setDescription(description);
+            if (mUpdated != -1) // check if the note is newly added or an edited one
+                mNote.setmDate(String.format("Edited on: %s",
+                        new SimpleDateFormat("EEE, MMM d, ''yy hh:mm aaa",
+                                Locale.getDefault()).format(new Date())));
+            else
+                mNote.setmDate(new SimpleDateFormat("EEE, MMM d, ''yy hh:mm aaa",
+                        Locale.getDefault()).format(new Date()));
+
+            // check if there is an image on edit text to add it into database
+            if (editTextDescription.getCompoundDrawables()[3] != null)
+                mNote.setImage(BitmapUtil.encodedImage(mBitmap));
             mSendNote.send(mNote, mUpdated);
             getDialog().dismiss();
         }
@@ -207,6 +213,22 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
         }
     }
 
+    // get user taken image and puts it into description edittext
+    // then add to note object
+    // compress  mBitmap to byte array using mBitmap CompressFormat
+    // then encode it to base 64 to store it as a string into the database
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            mBitmap = BitmapUtil.resamplePic(mFileLocation);
+            editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
+                    null,
+                    null,
+                    new BitmapDrawable(getResources(), mBitmap));
+            editTextDescription.setOnTouchListener(this);
+        }
+    }
+
     private void imageClick(View v) {
         PopupMenu popup = new PopupMenu(v.getContext(), v);
         //Inflating the Popup using xml file
@@ -217,7 +239,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.delete) {
-                    editTextDescription.setCompoundDrawables(null,
+                    editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
                             null,
                             null,
                             null);

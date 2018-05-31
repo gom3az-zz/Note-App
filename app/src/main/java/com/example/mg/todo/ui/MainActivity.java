@@ -1,22 +1,20 @@
 package com.example.mg.todo.ui;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 
+import com.example.mg.todo.App;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.ui.contract.ITodoContract;
 import com.example.mg.todo.ui.presenter.TodoPresenter;
 import com.example.mg.todo.utils.NoteDialog;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
-
-import java.util.List;
+import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,12 +27,12 @@ public class MainActivity extends AppCompatActivity
         NoteDialog.ISendNoteObject {
 
     @BindView(R.id.todoList)
+    public
     RecyclerView todoList;
     @BindView(R.id.floatingActionButton)
     FloatingActionButton floatingActionButton;
 
     private TodoPresenter mPresenter;
-    public NotesRecyclerViewAdapter notesRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,19 +45,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onResume() {
+        super.onResume();
+        mPresenter.init();
     }
 
-    // init home recycler view with data saved at shared pref
     @Override
-    public void init(List<NoteModel> set) {
-        todoList.addItemDecoration(new DividerItemDecoration(
-                todoList.getContext(),
-                DividerItemDecoration.VERTICAL));
-        notesRecyclerViewAdapter = new NotesRecyclerViewAdapter(this, set);
-        todoList.setAdapter(notesRecyclerViewAdapter);
+    protected void onStop() {
+        super.onStop();
+        todoList.setAdapter(null);
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
+        refWatcher.watch(this);
     }
 
     @Override
