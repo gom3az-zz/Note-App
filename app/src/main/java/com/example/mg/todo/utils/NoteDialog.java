@@ -147,10 +147,14 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
         // bottom drawable is at index 3 of edittext drawables
         final int DRAWABLE_BOTTOM = 3;
         // note image click listener
+        //Toast.makeText(mActivity, String.valueOf(event.getRawY()), Toast.LENGTH_SHORT).show();
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (event.getRawX() >= (
-                    editTextDescription.getBottom() - editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width())
-                    && event.getRawX() <= editTextDescription.getBottom()) {
+                    editTextDescription.getBottom() -
+                            editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width())
+                    && event.getRawX() <= editTextDescription.getBottom()
+                    && event.getRawY() >= editTextDescription.getBottom() -
+                    editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width()) {
                 imageClick(v);
                 return true;
             }
