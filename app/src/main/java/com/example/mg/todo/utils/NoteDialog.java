@@ -222,6 +222,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
                             null,
                             null);
                     mNote.setImage(null);
+                    editTextDescription.setOnTouchListener(null);
                 }
                 return true;
             }
