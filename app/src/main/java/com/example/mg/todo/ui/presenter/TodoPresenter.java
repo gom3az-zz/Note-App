@@ -36,13 +36,11 @@ public class TodoPresenter implements ITodoContract.IPresenter {
         return true;
     }
 
-
     @Override
     public void updateRecyclerViewData(List<NoteModel> newData) {
         mView.notesRecyclerViewAdapter.setAll(newData);
         mView.notesRecyclerViewAdapter.notifyDataSetChanged();
     }
-
 
     @Override
     public void openDialog(NoteModel note, int position) {

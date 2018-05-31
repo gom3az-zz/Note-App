@@ -79,8 +79,8 @@ public class NotesRecyclerViewAdapter
         holder.textTitle.setText(String.format("%s\n%s\n\n\n%s",
                 mValues.get(position).getText(),
                 mValues.get(position).getDescription(),
-                new SimpleDateFormat("EEE, MMM d, ''yy hh:mm aaa", Locale.ENGLISH).format(new Date())));
-        // hiding imageview if the note doesnt have a image
+                new SimpleDateFormat("EEE, MMM d, ''yy hh:mm aaa", Locale.getDefault()).format(new Date())));
+        // hiding image view if the note doesn't have a image
         // setting visibility to visible again if the user updates a non having image note
         // because we already bound the view of this note to gone
         if (mValues.get(position).getImage() == null) {
@@ -101,7 +101,6 @@ public class NotesRecyclerViewAdapter
             return 0;
         }
     }
-
 
     class ViewHolder extends RecyclerView.ViewHolder {
 

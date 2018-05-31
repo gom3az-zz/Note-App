@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 class BitmapUtil {
     static String mCurrentPhotoPath;
@@ -27,8 +28,9 @@ class BitmapUtil {
         return Base64.decode(mString.getBytes(), Base64.DEFAULT);
 
     }
+
     static File createTempImageFile(Context context) throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HH:mm:ss", Locale.getDefault()).format(new Date());
 
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -43,20 +45,24 @@ class BitmapUtil {
     }
 
     static Bitmap resamplePic(String imagePath) {
-        int newWidth = 400;
-        int newHeight = 450;
+
         Matrix matrix = new Matrix();
         matrix.postRotate(-90);
         Bitmap bm = BitmapFactory.decodeFile(imagePath);
+        int newWidth = bm.getWidth();
+        int newHeight = bm.getHeight();
+        int dstWidth = (int) (newWidth * 0.15f); // scale to 15% from original size
+        int dstHeight = (int) (newHeight * 0.15f);
+
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(
-                bm, newWidth, newHeight, true);
+                bm, dstWidth, dstHeight, true);
         bm.recycle();
         return Bitmap.createBitmap(scaledBitmap,
                 0,
                 0,
                 scaledBitmap.getWidth(),
                 scaledBitmap.getHeight(),
-                null,
+                matrix,
                 true);
     }
 }

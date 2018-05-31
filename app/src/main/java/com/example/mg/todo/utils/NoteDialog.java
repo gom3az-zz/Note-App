@@ -13,8 +13,11 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.PopupMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -35,7 +38,10 @@ import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
 
-public class NoteDialog extends android.support.v4.app.DialogFragment implements View.OnClickListener, View.OnKeyListener {
+public class NoteDialog extends android.support.v4.app.DialogFragment
+        implements View.OnClickListener,
+        View.OnKeyListener,
+        View.OnTouchListener {
 
     @BindView(R.id.edit_text_title)
     EditText editTextTitle;
@@ -58,6 +64,11 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
     public NoteDialog() {
     }
 
+    public void setModel(NoteModel model, int position) {
+        this.mNote = model;
+        mUpdated = position;
+    }
+
     @Override
     public void onAttach(Context context) {
         // casting send note object to parent activity to call its method
@@ -78,20 +89,20 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
         btnDone.setOnClickListener(this);
         btnAddImage.setOnClickListener(this);
         editTextDescription.setOnKeyListener(this);
-        // if user clicked on a note to update it it calls this function to update the ui of the fragment
-        // else it init a new note object
-        if (mNote != null) {
-            initDialogWithNoteData();
-        } else mNote = new NoteModel();
+
         return v;
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        // if user clicked on a note to update it it calls this function to update the ui of the fragment
+        // else it init a new note object
+        if (mNote != null) {
+            initDialogWithNoteData();
+        } else mNote = new NoteModel();
     }
 
     @Override
@@ -105,10 +116,9 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
             addNoteCheck();
 
         } else {
-            startIntentToTakePicture();
+            startPictureIntent();
         }
     }
-
 
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent event) {
@@ -119,6 +129,23 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
                 return true;
             }
         return false;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        // bottom drawable is at index 3 of edittext drawables
+        final int DRAWABLE_BOTTOM = 3;
+        // note image click listener
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (event.getRawX() >= (
+                    editTextDescription.getBottom() - editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width())
+                    && event.getRawX() <= editTextDescription.getBottom()) {
+                imageClick(v);
+                return true;
+            }
+        }
+        return false;
+
     }
 
     // get user taken image and puts it into description edittext
@@ -134,6 +161,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
                     null,
                     new BitmapDrawable(getResources(), bitmap));
             mNote.setImage(BitmapUtil.encodedImage(bitmap));
+            editTextDescription.setOnTouchListener(this);
         }
     }
 
@@ -149,6 +177,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
                     null,
                     null,
                     new BitmapDrawable(getResources(), bitmap));
+            editTextDescription.setOnTouchListener(this);
         }
     }
 
@@ -165,7 +194,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
         }
     }
 
-    private void startIntentToTakePicture() {
+    private void startPictureIntent() {
         try {
             Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             File file = BitmapUtil.createTempImageFile(mActivity);
@@ -178,11 +207,27 @@ public class NoteDialog extends android.support.v4.app.DialogFragment implements
         }
     }
 
-    public void setModel(NoteModel model, int position) {
-        this.mNote = model;
-        mUpdated = position;
-    }
+    private void imageClick(View v) {
+        PopupMenu popup = new PopupMenu(v.getContext(), v);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater()
+                .inflate(R.menu.poupup_menu, popup.getMenu());
 
+        //deletes image if user clicked delete button from menu
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.delete) {
+                    editTextDescription.setCompoundDrawables(null,
+                            null,
+                            null,
+                            null);
+                    mNote.setImage(null);
+                }
+                return true;
+            }
+        });
+        popup.show();
+    }
 
     public interface ISendNoteObject {
         void send(NoteModel newNote, int mUpdated);

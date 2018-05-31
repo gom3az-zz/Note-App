@@ -82,6 +82,4 @@ public class MainActivity extends AppCompatActivity
         // null , -1 are passed to create new note object
         mPresenter.openDialog(null, -1);
     }
-
-
 }

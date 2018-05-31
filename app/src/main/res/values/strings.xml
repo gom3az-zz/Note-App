@@ -6,4 +6,5 @@
     <string name="btn_done">Done</string>
     <string name="btn_add_image">Add image</string>
     <string name="image_description">TODO</string>
+    <string name="delete_menu_item">delete</string>
 </resources>
