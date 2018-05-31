@@ -19,3 +19,6 @@ These instructions will get you a copy of the project up and running on your loc
 * **Mohamed gomaa** - *Initial work* - [gom3az](https://github.com/gom3az)
 
 ## Screenshots
+![ScreenShot](https://github.com/gom3az/MVPSimpleTodo/blob/master/ss1.png?raw=true "Optional title")
+![ScreenShot](https://github.com/gom3az/MVPSimpleTodo/blob/master/ss2.png?raw=true "Optional title")
+![ScreenShot](https://github.com/gom3az/MVPSimpleTodo/blob/master/ss3.png?raw=true "Optional title")
