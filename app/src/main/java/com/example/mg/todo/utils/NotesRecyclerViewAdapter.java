@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -62,6 +63,11 @@ public class NotesRecyclerViewAdapter
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                if (holder.radioButton.getVisibility() == View.GONE)
+                    holder.radioButton.setVisibility(View.VISIBLE);
+                else holder.radioButton.setVisibility(View.GONE);
+
+                holder.radioButton.setChecked(!holder.radioButton.isChecked());
                 return itemLongClickListener.onItemLongClicked(holder.getAdapterPosition());
             }
         });
@@ -72,6 +78,9 @@ public class NotesRecyclerViewAdapter
                 onItemClickListener.onItemClicked(holder.getAdapterPosition());
             }
         });
+
+        holder.radioButton.setChecked(false);
+        holder.radioButton.setVisibility(View.GONE);
 
         holder.textTitle.setText(String.format("%s\n%s\n\n\n%s",
                 mValues.get(position).getText(),
@@ -105,6 +114,8 @@ public class NotesRecyclerViewAdapter
         TextView textTitle;
         @BindView(R.id.imageView)
         ImageView imageView;
+        @BindView(R.id.radio)
+        RadioButton radioButton;
 
         ViewHolder(View view) {
             super(view);

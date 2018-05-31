@@ -6,15 +6,15 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.example.mg.todo.App;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.ui.contract.ITodoContract;
 import com.example.mg.todo.ui.presenter.TodoPresenter;
 import com.example.mg.todo.utils.NoteDialog;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
-import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton floatingActionButton;
 
     private TodoPresenter mPresenter;
+    public MenuItem menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.poupup_menu, menu);
+        menuItem = menu.findItem(R.id.delete);
+        return true;
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         todoList.setAdapter(null);
@@ -59,8 +68,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
-        refWatcher.watch(this);
+      /*  RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
+        refWatcher.watch(this);*/
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete:
+                mPresenter.removeNotes();
+                break;
+
+        }
+        return true;
     }
 
     @Override

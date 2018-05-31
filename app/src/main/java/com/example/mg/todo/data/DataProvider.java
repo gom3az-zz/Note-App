@@ -41,7 +41,11 @@ public class DataProvider {
     }
 
     public void remove(int position) {
-        mNoteModels.remove(position);
+        try {
+            mNoteModels.remove(position);
+        } catch (IndexOutOfBoundsException e) {
+            mNoteModels = new ArrayList<>();
+        }
     }
 
     // if mUpdated is -1 then it means its a new object

@@ -10,12 +10,14 @@ import com.example.mg.todo.ui.contract.ITodoContract;
 import com.example.mg.todo.utils.NoteDialog;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TodoPresenter implements ITodoContract.IPresenter {
     private MainActivity mView;
     private DataProvider data;
     private NotesRecyclerViewAdapter notesRecyclerViewAdapter;
+    private List<Integer> mSelectedNotes;
 
     public TodoPresenter(MainActivity mView, SharedPreferences sharedPreferences) {
         this.mView = mView;
@@ -24,8 +26,16 @@ public class TodoPresenter implements ITodoContract.IPresenter {
 
     @Override
     public boolean onItemLongClick(int position) {
-        data.remove(position);
-        data.updateDataSet();
+        if (mSelectedNotes == null) mSelectedNotes = new ArrayList<>();
+        try {
+            if (mSelectedNotes.contains(position))
+                mSelectedNotes.remove(position);
+            else mSelectedNotes.add(position);
+        } catch (IndexOutOfBoundsException e) {
+            mSelectedNotes = new ArrayList<>();
+        }
+        if (mSelectedNotes.size() > 0) mView.menuItem.setVisible(true);
+        else mView.menuItem.setVisible(false);
         return true;
     }
 
@@ -52,6 +62,8 @@ public class TodoPresenter implements ITodoContract.IPresenter {
 
     @Override
     public void openDialog(NoteModel note, int position) {
+        mView.menuItem.setVisible(false);
+        if (mSelectedNotes != null) mSelectedNotes.clear();
         FragmentManager fm = mView.getSupportFragmentManager();
         NoteDialog noteDialog = new NoteDialog();
         noteDialog.setModel(note, position);
@@ -68,6 +80,15 @@ public class TodoPresenter implements ITodoContract.IPresenter {
     public void addNote(NoteModel newNote, int mUpdated) {
         if (mUpdated != -1) data.remove(mUpdated);
         data.addNote(newNote, mUpdated);
+        data.updateDataSet();
+    }
+
+    public void removeNotes() {
+        for (int i : mSelectedNotes) {
+            data.remove(i);
+        }
+        mSelectedNotes.clear();
+        mView.menuItem.setVisible(false);
         data.updateDataSet();
     }
 
