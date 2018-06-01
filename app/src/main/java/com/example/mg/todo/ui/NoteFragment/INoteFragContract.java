@@ -5,6 +5,9 @@ import android.view.View;
 
 public interface INoteFragContract {
     interface IView {
+        void onCancelImageCapture();
+
+        void onFilledDataError();
     }
 
     interface IPresenter {
@@ -15,7 +18,7 @@ public interface INoteFragContract {
 
         void onTakeImageClick();
 
-        void onActivityResult(int requestCode, Intent data);
+        void onActivityResult(int requestCode, int resultCode, Intent data);
 
         void onImageClick(View view);
     }

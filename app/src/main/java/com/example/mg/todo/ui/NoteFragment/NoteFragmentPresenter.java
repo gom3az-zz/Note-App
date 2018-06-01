@@ -10,7 +10,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
@@ -23,6 +22,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.mg.todo.ui.NoteFragment.NoteFragment.REQUEST_CODE;
 
 
@@ -62,7 +62,7 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
         String title = mView.editTextTitle.getText().toString();
         String description = mView.editTextDescription.getText().toString();
         if (title.equals("") || description.equals("")) {
-            Toast.makeText(mView.getContext(), "check entries!", Toast.LENGTH_SHORT).show();
+            mView.onFilledDataError();
         } else {
             mNote.setText(title);
             mNote.setDescription(description);
@@ -97,14 +97,15 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     }
 
     @Override
-    public void onActivityResult(int requestCode, Intent data) {
-        mBitmap = BitmapUtil.resamplePic(mFileLocation);
-        mView.editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
-                null,
-                null,
-                new BitmapDrawable(mView.getResources(), mBitmap));
-        mView.editTextDescription.setOnTouchListener(mView);
-
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            mBitmap = BitmapUtil.resamplePic(mFileLocation);
+            mView.editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
+                    null,
+                    null,
+                    new BitmapDrawable(mView.getResources(), mBitmap));
+            mView.editTextDescription.setOnTouchListener(mView);
+        } else mView.onCancelImageCapture();
     }
 
     @Override

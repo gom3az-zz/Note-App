@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
@@ -24,30 +25,29 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static android.app.Activity.RESULT_OK;
-
 public class NoteFragment extends android.support.v4.app.DialogFragment
         implements INoteFragContract.IView,
         Button.OnClickListener,
         EditText.OnTouchListener {
 
-    //private static final String TAG = "NoteFragment";
-    public static final int REQUEST_CODE = 19;
     @BindView(R.id.edit_text_title)
     public
     EditText editTextTitle;
     @BindView(R.id.edit_text_description)
     public
     EditText editTextDescription;
-    public ISendNoteObject mSendNote;
-    public int mUpdated;
     @BindView(R.id.btn_done)
     Button btnDone;
     @BindView(R.id.btn_add_image)
     Button btnAddImage;
-    Unbinder unbinder;
+
     private NoteFragmentPresenter mPresenter;
+    //private static final String TAG = "NoteFragment";
+    public static final int REQUEST_CODE = 19;
+    public ISendNoteObject mSendNote;
+    public int mUpdated;
     private NoteModel mNote;
+    Unbinder unbinder;
 
 
     public NoteFragment() {
@@ -135,11 +135,20 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
     // then encode it to base 64 to store it as a string into the database
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            mPresenter.onActivityResult(requestCode, data);
-        }
+        mPresenter.onActivityResult(requestCode, resultCode, data);
+
     }
 
+    @Override
+    public void onCancelImageCapture() {
+        Toast.makeText(this.getContext(), "request canceled", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFilledDataError() {
+        Toast.makeText(this.getContext(), "check entries!", Toast.LENGTH_SHORT).show();
+
+    }
 
     public interface ISendNoteObject {
         void sendNoteObject(NoteModel newNote, int mUpdated);
