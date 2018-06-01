@@ -43,25 +43,25 @@ public class TodoPresenter implements ITodoContract.IPresenter {
     @Override
     public void onItemClick(int position) {
         NoteModel note = data.getNote(position);
-        noteDialog(note, position);
+        onNoteClick(note, position);
     }
 
     @Override
-    public void updateRecyclerViewData(List<NoteModel> newData) {
+    public void updateViewData(List<NoteModel> newData) {
         notesRecyclerViewAdapter.setAll(newData);
         notesRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void init() {
-        // init home recycler view with data saved at shared pref
+    public void initMainRecyclerData() {
+        // initMainRecyclerData home recycler view with data saved at shared pref
         notesRecyclerViewAdapter = new NotesRecyclerViewAdapter(mView, data.getDataModels());
         mView.todoList.setAdapter(notesRecyclerViewAdapter);
         if (mSelectedNotes != null) mSelectedNotes.clear();
     }
 
     @Override
-    public void noteDialog(NoteModel note, int position) {
+    public void onNoteClick(NoteModel note, int position) {
         FragmentManager fm = mView.getSupportFragmentManager();
         NoteDialog noteDialog = new NoteDialog();
         noteDialog.setModel(note, position);
@@ -75,7 +75,7 @@ public class TodoPresenter implements ITodoContract.IPresenter {
     // if it equals to -1 then it means its a new note else its an updated note
     // so we remove the old note object before adding the new updated one
     @Override
-    public void addNote(NoteModel newNote, int mUpdated) {
+    public void onNoteDoneClick(NoteModel newNote, int mUpdated) {
         if (mUpdated != -1) data.remove(mUpdated);
         data.addNote(newNote, mUpdated);
         data.updateDataSet();

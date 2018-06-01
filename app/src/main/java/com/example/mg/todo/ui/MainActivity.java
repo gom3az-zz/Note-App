@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.init();
+        mPresenter.initMainRecyclerData();
         if (menuItem != null) menuItem.setVisible(false);
     }
 
@@ -96,13 +96,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void send(NoteModel newNote, int mUpdated) {
-        mPresenter.addNote(newNote, mUpdated);
+    public void sendNoteObject(NoteModel newNote, int mUpdated) {
+        mPresenter.onNoteDoneClick(newNote, mUpdated);
     }
 
     @OnClick(R.id.floatingActionButton)
     public void onViewClicked() {
         // null , -1 are passed to create new note object
-        mPresenter.noteDialog(null, -1);
+        mPresenter.onNoteClick(null, -1);
     }
 }

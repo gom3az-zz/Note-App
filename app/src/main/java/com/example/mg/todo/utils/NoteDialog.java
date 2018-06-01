@@ -75,13 +75,13 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
 
     @Override
     public void onAttach(Context context) {
-        // casting send note object to parent activity to call its method
+        // casting sendNoteObject note object to parent activity to call its method
         super.onAttach(context);
         this.mActivity = context;
         try {
             mSendNote = (ISendNoteObject) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement send data");
+            throw new ClassCastException(context.toString() + " must implement sendNoteObject data");
         }
     }
 
@@ -103,7 +103,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
         Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         // if user clicked on a note to update it it calls this function to update the ui of the fragment
-        // else it init a new note object
+        // else it initMainRecyclerData a new note object
         if (mNote != null) {
             initDialogWithNoteData();
         } else mNote = new NoteModel();
@@ -119,7 +119,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
     public void onClick(View view) {
         // if user clicked done button
         // gets user entered data and add it into note object
-        // then send it to to presenter through main activity to handle it
+        // then sendNoteObject it to to presenter through main activity to handle it
         // else user clicked add image button
         // opens a media store broker to take image
         if (view.getId() == R.id.btn_done) {
@@ -198,7 +198,7 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
             // check if there is an image on edit text to add it into database
             if (editTextDescription.getCompoundDrawables()[3] != null)
                 mNote.setImage(BitmapUtil.encodedImage(mBitmap));
-            mSendNote.send(mNote, mUpdated);
+            mSendNote.sendNoteObject(mNote, mUpdated);
             getDialog().dismiss();
         }
     }
@@ -256,6 +256,6 @@ public class NoteDialog extends android.support.v4.app.DialogFragment
     }
 
     public interface ISendNoteObject {
-        void send(NoteModel newNote, int mUpdated);
+        void sendNoteObject(NoteModel newNote, int mUpdated);
     }
 }

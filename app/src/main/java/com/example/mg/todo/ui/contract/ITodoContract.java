@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface ITodoContract {
     interface IView {
-        //void init(List<NoteModel> set);
     }
 
     interface IPresenter {
@@ -15,13 +14,13 @@ public interface ITodoContract {
 
         void onItemClick(int position);
 
-        void noteDialog(NoteModel note, int position);
+        void onNoteClick(NoteModel note, int position);
 
-        void addNote(NoteModel newNote, int mUpdated);
+        void onNoteDoneClick(NoteModel newNote, int mUpdated);
 
-        void updateRecyclerViewData(List<NoteModel> newData);
+        void updateViewData(List<NoteModel> newData);
 
-        void init();
+        void initMainRecyclerData();
     }
 }
 

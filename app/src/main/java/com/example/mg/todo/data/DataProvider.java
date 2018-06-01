@@ -36,7 +36,7 @@ public class DataProvider {
     public void updateDataSet() {
         json = gson.toJson(mNoteModels);
         editor.putString(KEY_NEW_NOTE, json).apply();
-        mPresenter.updateRecyclerViewData(mNoteModels);
+        mPresenter.updateViewData(mNoteModels);
 
     }
 
