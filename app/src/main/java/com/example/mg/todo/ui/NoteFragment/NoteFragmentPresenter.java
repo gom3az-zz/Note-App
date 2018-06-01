@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.mg.todo.ui.NoteFragment.NoteFragment.REQUEST_CODE;
 
 
 public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
@@ -31,6 +30,7 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     private NoteModel mNote;
     private String mFileLocation;
     private Bitmap mBitmap;
+    private static final int REQUEST_CODE = 19;
 
     NoteFragmentPresenter(NoteFragment mView, NoteModel data) {
         this.mView = mView;

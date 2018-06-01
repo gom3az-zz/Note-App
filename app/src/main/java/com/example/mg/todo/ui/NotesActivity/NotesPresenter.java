@@ -47,7 +47,6 @@ public class NotesPresenter implements INotesContract.IPresenter {
     @Override
     public void updateViewData(List<NoteModel> newData) {
         notesRecyclerViewAdapter.setAll(newData);
-        notesRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override

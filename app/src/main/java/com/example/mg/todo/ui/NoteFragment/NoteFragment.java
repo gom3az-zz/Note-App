@@ -41,14 +41,14 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
     @BindView(R.id.btn_add_image)
     Button btnAddImage;
 
-    private NoteFragmentPresenter mPresenter;
     //private static final String TAG = "NoteFragment";
-    public static final int REQUEST_CODE = 19;
+    private static final String KEY_UPDATED = "KEY_UPDATED";
+    private static final String KEY_NOTE_MODEL = "KEY_NOTE_MODEL";
     public ISendNoteObject mSendNote;
-    public int mUpdated;
     private NoteModel mNote;
-    Unbinder unbinder;
-
+    public int mUpdated;
+    private NoteFragmentPresenter mPresenter;
+    private Unbinder unbinder;
 
     public NoteFragment() {
     }
@@ -86,10 +86,26 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
         Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
+        if (savedInstanceState != null) {
+            mUpdated = savedInstanceState.getInt(KEY_UPDATED);
+            mNote = savedInstanceState.getParcelable(KEY_NOTE_MODEL);
+        }
         //update the ui of the fragment to the opened note by user
         // transforming mBitmap into drawable to display it on edittext
         mPresenter.initFragmentData();
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_UPDATED, mUpdated);
+        outState.putParcelable(KEY_NOTE_MODEL, mNote);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     @Override

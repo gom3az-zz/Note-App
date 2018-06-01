@@ -45,6 +45,7 @@ public class NotesRecyclerViewAdapter
 
     public void setAll(List<NoteModel> values) {
         mValues = values;
+        notifyDataSetChanged();
     }
 
     @NonNull
