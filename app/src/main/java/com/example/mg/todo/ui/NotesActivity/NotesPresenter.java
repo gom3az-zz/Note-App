@@ -15,7 +15,7 @@ public class NotesPresenter implements INotesContract.IPresenter {
     private NotesActivity mView;
     private DataProvider data;
     private NotesRecyclerViewAdapter notesRecyclerViewAdapter;
-    private List<Integer> mSelectedNotes;
+    private List<Integer> mSelectedNotes = new ArrayList<>();
 
     NotesPresenter(NotesActivity mView, SharedPreferences sharedPreferences) {
         this.mView = mView;
@@ -24,14 +24,12 @@ public class NotesPresenter implements INotesContract.IPresenter {
 
     @Override
     public boolean onItemLongClick(int position) {
-        if (mSelectedNotes == null) mSelectedNotes = new ArrayList<>();
-        try {
-            if (mSelectedNotes.contains(position))
-                mSelectedNotes.remove(position);
-            else mSelectedNotes.add(position);
-        } catch (IndexOutOfBoundsException e) {
-            mSelectedNotes = new ArrayList<>();
+        if (mSelectedNotes.contains(position)) {
+            mSelectedNotes.remove(position);
+        } else {
+            mSelectedNotes.add(position);
         }
+
         if (mSelectedNotes.size() > 0) mView.menuItem.setVisible(true);
         else mView.menuItem.setVisible(false);
         return true;

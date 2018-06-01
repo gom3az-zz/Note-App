@@ -64,10 +64,8 @@ public class NotesRecyclerViewAdapter
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (holder.radioButton.getVisibility() == View.GONE)
-                    holder.radioButton.setVisibility(View.VISIBLE);
-                else holder.radioButton.setVisibility(View.GONE);
-
+                holder.radioButton.setVisibility(
+                        holder.radioButton.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                 holder.radioButton.setChecked(!holder.radioButton.isChecked());
                 return itemLongClickListener.onItemLongClicked(holder.getAdapterPosition());
             }

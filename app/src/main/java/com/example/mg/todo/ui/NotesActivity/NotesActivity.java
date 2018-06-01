@@ -8,12 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.mg.todo.App;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.ui.NoteFragment.NoteFragment;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
-import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,8 +55,8 @@ public class NotesActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
-        refWatcher.watch(this);
+        // RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
+        // refWatcher.watch(this);
     }
 
     @Override
