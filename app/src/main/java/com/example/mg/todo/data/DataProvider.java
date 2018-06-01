@@ -40,11 +40,6 @@ public class DataProvider {
         editor.putString(KEY_NEW_NOTE, json).apply();
     }
 
-    public void removeNote(int position) {
-        mNoteModels.remove(position);
-        dataSetOperations.onRemove(position);
-    }
-
     public void addNote(NoteModel newNote) {
         try {
             mNoteModels.add(newNote);
@@ -64,6 +59,10 @@ public class DataProvider {
         dataSetOperations.onUpdate(mUpdated);
     }
 
+    public void removeNote(int position) {
+        mNoteModels.remove(position);
+        dataSetOperations.onRemove(position);
+    }
 
     public NoteModel getNote(int position) {
         return mNoteModels.get(position);
@@ -76,7 +75,6 @@ public class DataProvider {
             return new ArrayList<>(0);
         }
     }
-
 
     public interface DataSetOperations {
 

@@ -18,6 +18,8 @@ public interface INotesContract {
 
         void initMainRecyclerData();
 
+        void removeNotes();
+
         void onStop();
 
     }

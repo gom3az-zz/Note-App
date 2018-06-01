@@ -24,6 +24,22 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
     }
 
     @Override
+    public void initMainRecyclerData() {
+        // initFragmentData home recycler view with data saved at shared pref
+        notesRecyclerViewAdapter = new NotesRecyclerViewAdapter(mView, data.getDataModels());
+        mView.todoList.setItemAnimator(new DefaultItemAnimator());
+        mView.todoList.setAdapter(notesRecyclerViewAdapter);
+        if (mView.menuItem != null) mView.menuItem.setVisible(false);
+        if (mSelectedNotes != null) mSelectedNotes.clear();
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        NoteModel note = data.getNote(position);
+        onNoteClick(note, position);
+    }
+
+    @Override
     public boolean onItemLongClick(int location) {
         String position = String.valueOf(location);
         if (mSelectedNotes.contains(position)) {
@@ -35,23 +51,6 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
         if (mSelectedNotes.size() > 0) mView.menuItem.setVisible(true);
         else mView.menuItem.setVisible(false);
         return true;
-    }
-
-    //// TODO: 5/29/2018 update on click listener to edit note with more stuff
-    @Override
-    public void onItemClick(int position) {
-        NoteModel note = data.getNote(position);
-        onNoteClick(note, position);
-    }
-
-    @Override
-    public void initMainRecyclerData() {
-        // initFragmentData home recycler view with data saved at shared pref
-        notesRecyclerViewAdapter = new NotesRecyclerViewAdapter(mView, data.getDataModels());
-        mView.todoList.setItemAnimator(new DefaultItemAnimator());
-        mView.todoList.setAdapter(notesRecyclerViewAdapter);
-        if (mView.menuItem != null) mView.menuItem.setVisible(false);
-        if (mSelectedNotes != null) mSelectedNotes.clear();
     }
 
     @Override
@@ -77,7 +76,8 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
 
     }
 
-    void removeNotes() {
+    @Override
+    public void removeNotes() {
         for (int i = mSelectedNotes.size() - 1; i >= 0; i--) {
             data.removeNote(Integer.valueOf(mSelectedNotes.get(i)));
         }
