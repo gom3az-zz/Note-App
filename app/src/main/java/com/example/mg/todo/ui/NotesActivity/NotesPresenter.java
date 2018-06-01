@@ -1,25 +1,23 @@
-package com.example.mg.todo.ui.presenter;
+package com.example.mg.todo.ui.NotesActivity;
 
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
 
 import com.example.mg.todo.data.DataProvider;
 import com.example.mg.todo.data.model.NoteModel;
-import com.example.mg.todo.ui.MainActivity;
-import com.example.mg.todo.ui.contract.ITodoContract;
-import com.example.mg.todo.utils.NoteDialog;
+import com.example.mg.todo.ui.NoteFragment.NoteFragment;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodoPresenter implements ITodoContract.IPresenter {
-    private MainActivity mView;
+public class NotesPresenter implements INotesContract.IPresenter {
+    private NotesActivity mView;
     private DataProvider data;
     private NotesRecyclerViewAdapter notesRecyclerViewAdapter;
     private List<Integer> mSelectedNotes;
 
-    public TodoPresenter(MainActivity mView, SharedPreferences sharedPreferences) {
+    NotesPresenter(NotesActivity mView, SharedPreferences sharedPreferences) {
         this.mView = mView;
         data = new DataProvider(sharedPreferences, this);
     }
@@ -54,19 +52,20 @@ public class TodoPresenter implements ITodoContract.IPresenter {
 
     @Override
     public void initMainRecyclerData() {
-        // initMainRecyclerData home recycler view with data saved at shared pref
+        // initFragmentData home recycler view with data saved at shared pref
         notesRecyclerViewAdapter = new NotesRecyclerViewAdapter(mView, data.getDataModels());
         mView.todoList.setAdapter(notesRecyclerViewAdapter);
+        if (mView.menuItem != null) mView.menuItem.setVisible(false);
         if (mSelectedNotes != null) mSelectedNotes.clear();
     }
 
     @Override
     public void onNoteClick(NoteModel note, int position) {
         FragmentManager fm = mView.getSupportFragmentManager();
-        NoteDialog noteDialog = new NoteDialog();
-        noteDialog.setModel(note, position);
+        NoteFragment noteFragment = new NoteFragment();
+        noteFragment.setModel(note, position);
         fm.beginTransaction()
-                .add(noteDialog.getId(), noteDialog, NoteDialog.class.getName())
+                .add(noteFragment.getId(), noteFragment, NoteFragment.class.getName())
                 .commit();
     }
 
@@ -84,7 +83,7 @@ public class TodoPresenter implements ITodoContract.IPresenter {
 
     }
 
-    public void removeNotes() {
+    void removeNotes() {
         for (int i : mSelectedNotes) {
             data.remove(i);
         }

@@ -3,7 +3,7 @@ package com.example.mg.todo.data;
 import android.content.SharedPreferences;
 
 import com.example.mg.todo.data.model.NoteModel;
-import com.example.mg.todo.ui.presenter.TodoPresenter;
+import com.example.mg.todo.ui.NotesActivity.NotesPresenter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -13,8 +13,8 @@ import java.util.List;
 
 public class DataProvider {
     private SharedPreferences.Editor editor;
-    private TodoPresenter mPresenter;
-    private final String KEY_NEW_NOTE = "NEW_NOTE6";
+    private final String KEY_NEW_NOTE = "NEW_NOTE7";
+    private NotesPresenter mPresenter;
     private Gson gson = new Gson();
     private String json;
     private List<NoteModel> mNoteModels;
@@ -22,9 +22,9 @@ public class DataProvider {
     // TODO: 5/28/2018 change shared pref data storage to sqlite
     // storing array of object as a string into shared pref
     //
-    public DataProvider(SharedPreferences sharedPreferences, TodoPresenter todoPresenter) {
+    public DataProvider(SharedPreferences sharedPreferences, NotesPresenter notesPresenter) {
         editor = sharedPreferences.edit();
-        mPresenter = todoPresenter;
+        mPresenter = notesPresenter;
         Type type = new TypeToken<List<NoteModel>>() {
         }.getType();
 

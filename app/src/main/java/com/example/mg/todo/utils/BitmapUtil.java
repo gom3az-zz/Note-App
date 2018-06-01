@@ -14,22 +14,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-class BitmapUtil {
-    static String mCurrentPhotoPath;
+public class BitmapUtil {
+    public static String mCurrentPhotoPath;
 
-    static String encodedImage(Bitmap bitmap) {
+    public static String encodedImage(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] b = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(b, Base64.DEFAULT);
     }
 
-    static byte[] decodeImage(String mString) {
+    public static byte[] decodeImage(String mString) {
         return Base64.decode(mString.getBytes(), Base64.DEFAULT);
 
     }
 
-    static File createTempImageFile(Context context) throws IOException {
+    public static File createTempImageFile(Context context) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HH:mm:ss", Locale.getDefault()).format(new Date());
 
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -44,7 +44,7 @@ class BitmapUtil {
         return image;
     }
 
-    static Bitmap resamplePic(String imagePath) {
+    public static Bitmap resamplePic(String imagePath) {
 
         Matrix matrix = new Matrix();
         matrix.postRotate(-90);

@@ -1,10 +1,10 @@
-package com.example.mg.todo.ui.contract;
+package com.example.mg.todo.ui.NotesActivity;
 
 import com.example.mg.todo.data.model.NoteModel;
 
 import java.util.List;
 
-public interface ITodoContract {
+public interface INotesContract {
     interface IView {
     }
 
