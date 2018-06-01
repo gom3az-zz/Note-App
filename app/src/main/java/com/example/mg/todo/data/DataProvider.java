@@ -18,11 +18,13 @@ public class DataProvider {
     private Gson gson = new Gson();
     private String json;
     private List<NoteModel> mNoteModels;
+    private DataSetOperations dataSetOperations;
 
     // TODO: 5/28/2018 change shared pref data storage to sqlite
     // storing array of object as a string into shared pref
     //
     public DataProvider(SharedPreferences sharedPreferences, NotesPresenter notesPresenter) {
+        dataSetOperations = notesPresenter;
         editor = sharedPreferences.edit();
         mPresenter = notesPresenter;
         Type type = new TypeToken<List<NoteModel>>() {
@@ -36,31 +38,32 @@ public class DataProvider {
     public void updateDataSet() {
         json = gson.toJson(mNoteModels);
         editor.putString(KEY_NEW_NOTE, json).apply();
-        mPresenter.updateViewData(mNoteModels);
-
     }
 
-    public void remove(int position) {
-        try {
-            mNoteModels.remove(position);
-        } catch (IndexOutOfBoundsException e) {
-            mNoteModels = new ArrayList<>();
-        }
+    public void removeNote(int position) {
+        mNoteModels.remove(position);
+        dataSetOperations.onRemove(position);
     }
 
-    // if mUpdated is -1 then it means its a new object
-    // if not then it adds the updated note to its same location
-    public void addNote(NoteModel newNote, int mUpdated) {
+    public void addNote(NoteModel newNote) {
         try {
-            if (mUpdated != -1) {
-                mNoteModels.add(mUpdated, newNote);
-            } else mNoteModels.add(newNote);
-
+            mNoteModels.add(newNote);
+            dataSetOperations.onAdd(mNoteModels.indexOf(newNote));
         } catch (NullPointerException e) {
+            // first note
             mNoteModels = new ArrayList<>();
             mNoteModels.add(newNote);
+            mPresenter.notesRecyclerViewAdapter.setAll(mNoteModels);
+            dataSetOperations.onAdd(mNoteModels.indexOf(newNote));
         }
+
     }
+
+    public void updateNote(NoteModel newNote, int mUpdated) {
+        mNoteModels.set(mUpdated, newNote);
+        dataSetOperations.onUpdate(mUpdated);
+    }
+
 
     public NoteModel getNote(int position) {
         return mNoteModels.get(position);
@@ -72,6 +75,17 @@ public class DataProvider {
         } catch (NullPointerException ignored) {
             return new ArrayList<>(0);
         }
+    }
+
+
+    public interface DataSetOperations {
+
+        void onUpdate(int position);
+
+        void onRemove(int position);
+
+        void onAdd(int position);
+
     }
 }
 

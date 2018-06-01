@@ -49,7 +49,7 @@ public class NotesActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        todoList.setAdapter(null);
+        mPresenter.onStop();
     }
 
     @Override

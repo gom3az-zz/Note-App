@@ -45,7 +45,6 @@ public class NotesRecyclerViewAdapter
 
     public void setAll(List<NoteModel> values) {
         mValues = values;
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -61,6 +60,7 @@ public class NotesRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -106,6 +106,7 @@ public class NotesRecyclerViewAdapter
             return 0;
         }
     }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
