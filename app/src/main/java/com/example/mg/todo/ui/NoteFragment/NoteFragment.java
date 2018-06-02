@@ -44,11 +44,11 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
     //private static final String TAG = "NoteFragment";
     private static final String KEY_UPDATED = "KEY_UPDATED";
     private static final String KEY_NOTE_MODEL = "KEY_NOTE_MODEL";
-    public ISendNoteObject mSendNote;
-    private NoteModel mNote;
-    public int mUpdated;
     private NoteFragmentPresenter mPresenter;
     private Unbinder unbinder;
+    private NoteModel mNote;
+    public ISendNoteObject mSendNote;
+    public int mUpdated;
 
     public NoteFragment() {
     }
@@ -69,7 +69,6 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
         }
     }
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.custom_dialog, container, false);
@@ -115,12 +114,9 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
         // then sendNoteObject it to to presenter through main activity to handle it
         // else user clicked add image button
         // opens a media store broker to take image
-        if (view.getId() == R.id.btn_done) {
-            mPresenter.onDoneClick();
+        if (view.getId() == R.id.btn_done) mPresenter.onDoneClick();
+        else mPresenter.onTakeImageClick();
 
-        } else {
-            mPresenter.onTakeImageClick();
-        }
     }
 
     @Override
@@ -130,7 +126,7 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
         final int DRAWABLE_BOTTOM = 3;
         // note image click listener
         //Toast.makeText(mActivity, String.valueOf(event.getRawY()), Toast.LENGTH_SHORT).show();
-        if (event.getAction() == MotionEvent.ACTION_UP) {
+        if (event.getAction() == MotionEvent.ACTION_UP)
             if (event.getRawX() >= (
                     editTextDescription.getBottom() -
                             editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width())
@@ -140,7 +136,6 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
                 mPresenter.onImageClick(v);
                 return true;
             }
-        }
         return false;
 
     }

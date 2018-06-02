@@ -10,6 +10,7 @@ import com.example.mg.todo.ui.NoteFragment.NoteFragment;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NotesPresenter implements INotesContract.IPresenter, DataProvider.DataSetOperations {
@@ -17,6 +18,7 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
     private DataProvider data;
     public NotesRecyclerViewAdapter notesRecyclerViewAdapter;
     private List<String> mSelectedNotes = new ArrayList<>();
+    //private static final String TAG = "NotesPresenter";
 
     NotesPresenter(NotesActivity mView, SharedPreferences sharedPreferences) {
         this.mView = mView;
@@ -42,14 +44,12 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
     @Override
     public boolean onItemLongClick(int location) {
         String position = String.valueOf(location);
-        if (mSelectedNotes.contains(position)) {
-            mSelectedNotes.remove(position);
-        } else {
-            mSelectedNotes.add(position);
-        }
+        if (mSelectedNotes.contains(position)) mSelectedNotes.remove(position);
+        else mSelectedNotes.add(position);
 
         if (mSelectedNotes.size() > 0) mView.menuItem.setVisible(true);
         else mView.menuItem.setVisible(false);
+
         return true;
     }
 
@@ -78,8 +78,10 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
 
     @Override
     public void removeNotes() {
-        for (int i = mSelectedNotes.size() - 1; i >= 0; i--) {
-            data.removeNote(Integer.valueOf(mSelectedNotes.get(i)));
+        Collections.sort(mSelectedNotes);
+        Collections.reverse(mSelectedNotes);
+        for (String i : mSelectedNotes) {
+            data.removeNote(Integer.valueOf((i)));
         }
         mSelectedNotes.clear();
         mView.menuItem.setVisible(false);
@@ -88,23 +90,24 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
     @Override
     public void onUpdate(int position) {
         notesRecyclerViewAdapter.notifyItemChanged(position);
+        data.updateDataSet();
     }
 
     @Override
     public void onRemove(int position) {
         notesRecyclerViewAdapter.notifyItemRemoved(position);
+        data.updateDataSet();
     }
 
     @Override
     public void onAdd(int position) {
         notesRecyclerViewAdapter.notifyItemInserted(position);
-
+        data.updateDataSet();
     }
 
     @Override
     public void onStop() {
         mView.todoList.setAdapter(null);
-        data.updateDataSet();
     }
 }
 

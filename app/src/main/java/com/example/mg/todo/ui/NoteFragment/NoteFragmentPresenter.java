@@ -26,11 +26,11 @@ import static android.app.Activity.RESULT_OK;
 
 
 public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
+    private static final int REQUEST_CODE = 19;
     private NoteFragment mView;
     private NoteModel mNote;
     private String mFileLocation;
     private Bitmap mBitmap;
-    private static final int REQUEST_CODE = 19;
 
     NoteFragmentPresenter(NoteFragment mView, NoteModel data) {
         this.mView = mView;
@@ -61,9 +61,8 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     public void onDoneClick() {
         String title = mView.editTextTitle.getText().toString();
         String description = mView.editTextDescription.getText().toString();
-        if (title.equals("") || description.equals("")) {
-            mView.onFilledDataError();
-        } else {
+        if (title.equals("") || description.equals("")) mView.onFilledDataError();
+        else {
             mNote.setText(title);
             mNote.setDescription(description);
             if (mView.mUpdated != -1) // check if the note is newly added or an edited one

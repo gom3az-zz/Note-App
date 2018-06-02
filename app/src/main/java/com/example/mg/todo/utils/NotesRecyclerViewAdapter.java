@@ -22,19 +22,10 @@ import butterknife.ButterKnife;
 public class NotesRecyclerViewAdapter
         extends RecyclerView.Adapter<NotesRecyclerViewAdapter.ViewHolder> {
 
-
     private OnItemLongClickListener itemLongClickListener;
     private OnItemClickListener onItemClickListener;
     private List<NoteModel> mValues;
     private Context mContext;
-
-    public interface OnItemLongClickListener {
-        boolean onItemLongClicked(int position);
-    }
-
-    public interface OnItemClickListener {
-        void onItemClicked(int position);
-    }
 
     public NotesRecyclerViewAdapter(Context context, List<NoteModel> set) {
         itemLongClickListener = (OnItemLongClickListener) context;
@@ -88,9 +79,8 @@ public class NotesRecyclerViewAdapter
         // hiding image view if the note doesn't have a image
         // setting visibility to visible again if the user updates a non having image note
         // because we already bound the view of this note to gone
-        if (mValues.get(position).getImage() == null) {
-            holder.imageView.setVisibility(View.GONE);
-        } else {
+        if (mValues.get(position).getImage() == null) holder.imageView.setVisibility(View.GONE);
+        else {
             holder.imageView.setVisibility(View.VISIBLE);
             Glide.with(mContext)
                     .load(BitmapUtil.decodeImage(mValues.get(position).getImage()))
@@ -122,4 +112,13 @@ public class NotesRecyclerViewAdapter
             ButterKnife.bind(this, view);
         }
     }
+
+    public interface OnItemLongClickListener {
+        boolean onItemLongClicked(int position);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(int position);
+    }
+
 }
