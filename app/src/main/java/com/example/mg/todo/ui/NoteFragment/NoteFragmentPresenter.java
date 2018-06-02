@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.mg.todo.R;
@@ -95,6 +96,10 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
         }
     }
 
+    // get user taken image and puts it into description edit text
+    // then add to note object
+    // compress  mBitmap to byte array using mBitmap CompressFormat
+    // then encode it to base 64 to store it as a string into the database
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
@@ -129,6 +134,23 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
             }
         });
         popup.show();
+    }
+
+    @Override
+    public void onTouch(View v, MotionEvent event) {
+
+        // bottom drawable is at index 3 of edit text drawables
+        final int DRAWABLE_BOTTOM = 3;
+        // note image click listener
+        if (event.getAction() == MotionEvent.ACTION_UP)
+            if (event.getRawX() >= (
+                    mView.editTextDescription.getBottom() -
+                            mView.editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width())
+                    && event.getRawX() <= mView.editTextDescription.getBottom()
+                    && event.getRawY() >= mView.editTextDescription.getBottom() -
+                    mView.editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width()) {
+                onImageClick(v);
+            }
     }
 
 }

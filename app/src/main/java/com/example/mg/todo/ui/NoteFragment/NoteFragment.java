@@ -90,7 +90,7 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
             mNote = savedInstanceState.getParcelable(KEY_NOTE_MODEL);
         }
         //update the ui of the fragment to the opened note by user
-        // transforming mBitmap into drawable to display it on edittext
+        // transforming mBitmap into drawable to display it on edit text
         mPresenter.initFragmentData();
     }
 
@@ -121,29 +121,11 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
-        // bottom drawable is at index 3 of edittext drawables
-        final int DRAWABLE_BOTTOM = 3;
-        // note image click listener
-        //Toast.makeText(mActivity, String.valueOf(event.getRawY()), Toast.LENGTH_SHORT).show();
-        if (event.getAction() == MotionEvent.ACTION_UP)
-            if (event.getRawX() >= (
-                    editTextDescription.getBottom() -
-                            editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width())
-                    && event.getRawX() <= editTextDescription.getBottom()
-                    && event.getRawY() >= editTextDescription.getBottom() -
-                    editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width()) {
-                mPresenter.onImageClick(v);
-                return true;
-            }
+        mPresenter.onTouch(v, event);
+        v.performClick();
         return false;
-
     }
 
-    // get user taken image and puts it into description edittext
-    // then add to note object
-    // compress  mBitmap to byte array using mBitmap CompressFormat
-    // then encode it to base 64 to store it as a string into the database
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mPresenter.onActivityResult(requestCode, resultCode, data);
@@ -157,8 +139,10 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
 
     @Override
     public void onFilledDataError() {
-        Toast.makeText(this.getContext(), "check entries!", Toast.LENGTH_SHORT).show();
-
+        if (editTextDescription.getText().toString().equals(""))
+            editTextDescription.setError("Missing!");
+        if (editTextTitle.getText().toString().equals(""))
+            editTextTitle.setError("Missing!");
     }
 
     public interface ISendNoteObject {
