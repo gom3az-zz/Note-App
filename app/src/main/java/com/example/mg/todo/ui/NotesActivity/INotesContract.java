@@ -4,6 +4,11 @@ import com.example.mg.todo.data.model.NoteModel;
 
 public interface INotesContract {
     interface IView {
+        void removeMessage(int size);
+
+        void noteAdded();
+
+        void noteUpdated();
     }
 
     interface IPresenter {
@@ -18,7 +23,7 @@ public interface INotesContract {
 
         void initMainRecyclerData();
 
-        void removeNotes();
+        void onRemoveClicked();
 
         void onStop();
 

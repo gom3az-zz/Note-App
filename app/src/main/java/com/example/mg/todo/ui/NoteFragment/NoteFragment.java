@@ -41,6 +41,7 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
     @BindView(R.id.btn_add_image)
     Button btnAddImage;
 
+
     //private static final String TAG = "NoteFragment";
     private static final String KEY_UPDATED = "KEY_UPDATED";
     private static final String KEY_NOTE_MODEL = "KEY_NOTE_MODEL";

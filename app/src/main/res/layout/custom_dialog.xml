@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="240dp"
     android:layout_height="wrap_content"
     android:background="@drawable/curvy_dialog"
@@ -9,9 +10,12 @@
         android:id="@+id/edit_text_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:background="@android:color/white"
         android:hint="@string/hint_new_note_title"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
+        android:padding="8dp"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -20,9 +24,12 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_below="@id/edit_text_title"
+        android:layout_margin="4dp"
+        android:background="@android:color/white"
         android:hint="@string/hint_new_note"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
+        android:padding="4dp"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -34,7 +41,7 @@
         android:layout_toStartOf="@+id/btn_done"
         android:background="@android:color/transparent"
         android:text="@string/btn_add_image"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold" />
 
     <Button
@@ -45,9 +52,8 @@
         android:layout_alignParentEnd="true"
         android:background="@android:color/transparent"
         android:text="@string/btn_done"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold" />
-
 
 
 </RelativeLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">todo</string>
+    <string name="app_name">Notes</string>
     <string name="hint_new_note">New note..</string>
     <string name="hint_new_note_title">Title</string>
     <string name="btn_done">Done</string>

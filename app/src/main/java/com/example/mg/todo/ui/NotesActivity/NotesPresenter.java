@@ -2,6 +2,7 @@ package com.example.mg.todo.ui.NotesActivity;
 
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 
 import com.example.mg.todo.data.DataProvider;
@@ -19,6 +20,7 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
     public NotesRecyclerViewAdapter notesRecyclerViewAdapter;
     private List<String> mSelectedNotes = new ArrayList<>();
     //private static final String TAG = "NotesPresenter";
+    private ActionMode mActionMode;
 
     NotesPresenter(NotesActivity mView, SharedPreferences sharedPreferences) {
         this.mView = mView;
@@ -49,7 +51,6 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
 
         if (mSelectedNotes.size() > 0) mView.menuItem.setVisible(true);
         else mView.menuItem.setVisible(false);
-
         return true;
     }
 
@@ -77,31 +78,34 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
     }
 
     @Override
-    public void removeNotes() {
+    public void onRemoveClicked() {
         Collections.sort(mSelectedNotes);
         Collections.reverse(mSelectedNotes);
-        for (String i : mSelectedNotes) {
-            data.removeNote(Integer.valueOf((i)));
+        for (String str : mSelectedNotes) {
+            data.removeNote(Integer.valueOf(str));
         }
-        mSelectedNotes.clear();
         mView.menuItem.setVisible(false);
+        mView.removeMessage(mSelectedNotes.size());
+        mSelectedNotes.clear();
+    }
+
+    @Override
+    public void onAdd(int position) {
+        notesRecyclerViewAdapter.notifyItemInserted(position);
+        data.updateDataSet();
+        mView.noteAdded();
     }
 
     @Override
     public void onUpdate(int position) {
         notesRecyclerViewAdapter.notifyItemChanged(position);
         data.updateDataSet();
+        mView.noteUpdated();
     }
 
     @Override
     public void onRemove(int position) {
         notesRecyclerViewAdapter.notifyItemRemoved(position);
-        data.updateDataSet();
-    }
-
-    @Override
-    public void onAdd(int position) {
-        notesRecyclerViewAdapter.notifyItemInserted(position);
         data.updateDataSet();
     }
 
