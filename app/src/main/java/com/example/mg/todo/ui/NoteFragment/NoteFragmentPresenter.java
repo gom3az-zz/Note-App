@@ -1,9 +1,11 @@
 package com.example.mg.todo.ui.NoteFragment;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
@@ -11,6 +13,8 @@ import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
@@ -123,17 +127,36 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.delete) {
-                    mView.editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
-                            null,
-                            null,
-                            null);
-                    mNote.setImage(null);
-                    mView.editTextDescription.setOnTouchListener(null);
+                    onDeleteClicked();
+                } else if (item.getItemId() == R.id.view) {
+                    onViewClicked();
                 }
                 return true;
             }
         });
         popup.show();
+    }
+
+    private void onDeleteClicked() {
+        mView.editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
+                null,
+                null,
+                null);
+        mNote.setImage(null);
+        mView.editTextDescription.setOnTouchListener(null);
+    }
+
+    @Override
+    public void onViewClicked() {
+        Dialog builder = new Dialog(Objects.requireNonNull(mView.getContext()));
+        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(builder.getWindow()).setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        builder.setContentView(R.layout.image_viewer);
+
+        ImageView imageView = builder.findViewById(R.id.fullimage);
+        imageView.setImageBitmap(BitmapUtil.resize(mBitmap));
+        builder.show();
     }
 
     @Override

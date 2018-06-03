@@ -65,4 +65,14 @@ public class BitmapUtil {
                 matrix,
                 true);
     }
+
+    public static Bitmap resize(Bitmap bm) {
+        int newWidth = bm.getWidth();
+        int newHeight = bm.getHeight();
+        int dstWidth = (int) (newWidth * 8f); // scale to 15% from original size
+        int dstHeight = (int) (newHeight * 8f);
+
+        return Bitmap.createScaledBitmap(
+                bm, dstWidth, dstHeight, true);
+    }
 }

@@ -3,8 +3,8 @@
     package="com.example.mg.todo">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <application
 
+    <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,6 +20,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".ui.NotesActivity.NotesActivity"
             android:label="Notes">

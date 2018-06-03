@@ -24,6 +24,8 @@ public interface INoteFragContract {
         void onImageClick(View view);
 
         void onTouch(View v, MotionEvent event);
+
+        void onViewClicked();
     }
 }
 

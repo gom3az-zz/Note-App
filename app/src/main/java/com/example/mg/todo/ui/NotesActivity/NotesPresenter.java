@@ -2,7 +2,6 @@ package com.example.mg.todo.ui.NotesActivity;
 
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 
 import com.example.mg.todo.data.DataProvider;
@@ -20,7 +19,6 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
     public NotesRecyclerViewAdapter notesRecyclerViewAdapter;
     private List<String> mSelectedNotes = new ArrayList<>();
     //private static final String TAG = "NotesPresenter";
-    private ActionMode mActionMode;
 
     NotesPresenter(NotesActivity mView, SharedPreferences sharedPreferences) {
         this.mView = mView;
