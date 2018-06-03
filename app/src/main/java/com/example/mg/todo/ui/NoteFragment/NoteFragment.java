@@ -103,9 +103,10 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDetach() {
+        super.onDetach();
         unbinder.unbind();
+        this.dismiss();
     }
 
     @Override

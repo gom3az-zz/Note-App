@@ -42,7 +42,7 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
         this.mNote = data;
     }
 
-
+    //todo fix image when rotating gone
     @Override
     public void initFragmentData() {
         // if user clicked on a note to update it it calls this function to update the ui of the fragment
@@ -79,8 +79,10 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
                         Locale.getDefault()).format(new Date()));
 
             // check if there is an image on edit text to add it into database
+            // else if user took an image and then delete it so we delete it
             if (mView.editTextDescription.getCompoundDrawables()[3] != null)
                 mNote.setImage(BitmapUtil.encodedImage(mBitmap));
+            else mNote.setImage(null);
             mView.mSendNote.sendNoteObject(mNote, mView.mUpdated);
             mView.getDialog().dismiss();
         }
@@ -117,49 +119,6 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     }
 
     @Override
-    public void onImageClick(View v) {
-        PopupMenu popup = new PopupMenu(v.getContext(), v);
-        //Inflating the Popup using xml file
-        popup.getMenuInflater()
-                .inflate(R.menu.popup_menu, popup.getMenu());
-
-        //deletes image if user clicked delete button from menu
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.delete) {
-                    onDeleteClicked();
-                } else if (item.getItemId() == R.id.view) {
-                    onViewClicked();
-                }
-                return true;
-            }
-        });
-        popup.show();
-    }
-
-    private void onDeleteClicked() {
-        mView.editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
-                null,
-                null,
-                null);
-        mNote.setImage(null);
-        mView.editTextDescription.setOnTouchListener(null);
-    }
-
-    @Override
-    public void onViewClicked() {
-        Dialog builder = new Dialog(Objects.requireNonNull(mView.getContext()));
-        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(builder.getWindow()).setBackgroundDrawable(
-                new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        builder.setContentView(R.layout.image_viewer);
-
-        ImageView imageView = builder.findViewById(R.id.fullimage);
-        imageView.setImageBitmap(BitmapUtil.resize(mBitmap));
-        builder.show();
-    }
-
-    @Override
     public void onTouch(View v, MotionEvent event) {
 
         // bottom drawable is at index 3 of edit text drawables
@@ -172,9 +131,53 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
                     && event.getRawX() <= mView.editTextDescription.getBottom()
                     && event.getRawY() >= mView.editTextDescription.getBottom() -
                     mView.editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width()) {
-                onImageClick(v);
+                onImageTouch(v);
             }
     }
+
+    @Override
+    public void onImageTouch(View v) {
+        PopupMenu popup = new PopupMenu(v.getContext(), v);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater()
+                .inflate(R.menu.popup_menu, popup.getMenu());
+
+        //deletes image if user clicked delete button from menu
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.delete) {
+                    onDeleteImageClicked();
+                } else if (item.getItemId() == R.id.view) {
+                    onViewImageClicked();
+                }
+                return true;
+            }
+        });
+        popup.show();
+    }
+
+    @Override
+    public void onDeleteImageClicked() {
+        mView.editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
+                null,
+                null,
+                null);
+        // mNote.setImage(null);
+        mView.editTextDescription.setOnTouchListener(null);
+    }
+
+    @Override
+    public void onViewImageClicked() {
+        final Dialog builder = new Dialog(Objects.requireNonNull(mView.getContext()));
+        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(builder.getWindow()).setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        builder.setContentView(R.layout.image_viewer);
+        ImageView imageView = builder.findViewById(R.id.image_preview);
+        imageView.setImageBitmap(BitmapUtil.resize(mBitmap));
+        builder.show();
+    }
+
 
 }
 

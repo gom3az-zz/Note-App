@@ -21,11 +21,13 @@ public interface INoteFragContract {
 
         void onActivityResult(int requestCode, int resultCode, Intent data);
 
-        void onImageClick(View view);
+        void onImageTouch(View view);
 
         void onTouch(View v, MotionEvent event);
 
-        void onViewClicked();
+        void onViewImageClicked();
+
+        void onDeleteImageClicked();
     }
 }
 
