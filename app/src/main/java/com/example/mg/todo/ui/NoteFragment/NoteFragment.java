@@ -2,22 +2,26 @@ package com.example.mg.todo.ui.NoteFragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
+import com.example.mg.todo.utils.BitmapUtil;
 
 import java.util.Objects;
 
@@ -25,10 +29,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class NoteFragment extends android.support.v4.app.DialogFragment
+public class NoteFragment extends DialogFragment
         implements INoteFragContract.IView,
-        Button.OnClickListener,
-        EditText.OnTouchListener {
+        Button.OnClickListener {
 
     @BindView(R.id.edit_text_title)
     public
@@ -40,11 +43,13 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
     Button btnDone;
     @BindView(R.id.btn_add_image)
     Button btnAddImage;
-
+    @BindView(R.id.image_note)
+    ImageView imageNote;
 
     //private static final String TAG = "NoteFragment";
     private static final String KEY_UPDATED = "KEY_UPDATED";
     private static final String KEY_NOTE_MODEL = "KEY_NOTE_MODEL";
+
     private NoteFragmentPresenter mPresenter;
     private Unbinder unbinder;
     private NoteModel mNote;
@@ -71,12 +76,20 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.custom_dialog, container, false);
         unbinder = ButterKnife.bind(this, v);
         btnDone.setOnClickListener(this);
         btnAddImage.setOnClickListener(this);
         mPresenter = new NoteFragmentPresenter(this, mNote);
+
         return v;
     }
 
@@ -85,7 +98,6 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
         if (savedInstanceState != null) {
             mUpdated = savedInstanceState.getInt(KEY_UPDATED);
             mNote = savedInstanceState.getParcelable(KEY_NOTE_MODEL);
@@ -117,21 +129,25 @@ public class NoteFragment extends android.support.v4.app.DialogFragment
         // else user clicked add image button
         // opens a media store broker to take image
         if (view.getId() == R.id.btn_done) mPresenter.onDoneClick();
+        else if (view.getId() == R.id.image_note) mPresenter.onImageClick(view);
         else mPresenter.onTakeImageClick();
 
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        mPresenter.onTouch(v, event);
-        v.performClick();
-        return false;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mPresenter.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    @Override
+    public void onImageAdded(Bitmap mBitmap, float factor) {
+        Bitmap bm = BitmapUtil.resize(mBitmap, factor);
+        Glide.with(Objects.requireNonNull(getContext()))
+                .asBitmap()
+                .load(bm)
+                .into(imageNote);
+        imageNote.setOnClickListener(this);
     }
 
     @Override

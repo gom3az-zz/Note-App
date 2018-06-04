@@ -1,17 +1,16 @@
 package com.example.mg.todo.ui.NoteFragment;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -29,7 +28,7 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
-
+@SuppressLint("ClickableViewAccessibility")
 public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     private static final int REQUEST_CODE = 19;
     private NoteFragment mView;
@@ -53,11 +52,7 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
             if (mNote.getImage() != null) {
                 byte[] bytes = BitmapUtil.decodeImage(mNote.getImage());
                 mBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                mView.editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
-                        null,
-                        null,
-                        new BitmapDrawable(mView.getResources(), mBitmap));
-                mView.editTextDescription.setOnTouchListener(mView);
+                mView.onImageAdded(mBitmap, 2f);
             }
         } else mNote = new NoteModel();
     }
@@ -80,7 +75,7 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
 
             // check if there is an image on edit text to add it into database
             // else if user took an image and then delete it so we delete it
-            if (mView.editTextDescription.getCompoundDrawables()[3] != null)
+            if (mView.imageNote.getDrawable() != null)
                 mNote.setImage(BitmapUtil.encodedImage(mBitmap));
             else mNote.setImage(null);
             mView.mSendNote.sendNoteObject(mNote, mView.mUpdated);
@@ -90,15 +85,21 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
 
     @Override
     public void onTakeImageClick() {
-        try {
-            Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File file = BitmapUtil.createTempImageFile(Objects.requireNonNull(mView.getActivity()));
-            mFileLocation = BitmapUtil.mCurrentPhotoPath;
-            Uri uri = FileProvider.getUriForFile(mView.getActivity(), "com.example.mg.todo", file);
-            i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            mView.startActivityForResult(i, REQUEST_CODE);
-        } catch (IOException e) {
-            e.printStackTrace();
+        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (i.resolveActivity(Objects.requireNonNull(mView.getActivity()).getPackageManager()) != null) {
+            File file = null;
+            try {
+                file = BitmapUtil.createTempImageFile(Objects.requireNonNull(mView.getActivity()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (file != null) {
+
+                mFileLocation = BitmapUtil.mCurrentPhotoPath;
+                Uri uri = FileProvider.getUriForFile(mView.getActivity(), "com.example.mg.todo", file);
+                i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                mView.startActivityForResult(i, REQUEST_CODE);
+            }
         }
     }
 
@@ -110,33 +111,13 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             mBitmap = BitmapUtil.resamplePic(mFileLocation);
-            mView.editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
-                    null,
-                    null,
-                    new BitmapDrawable(mView.getResources(), mBitmap));
-            mView.editTextDescription.setOnTouchListener(mView);
+            mView.onImageAdded(mBitmap, .30f);
         } else mView.onCancelImageCapture();
+
     }
 
     @Override
-    public void onTouch(View v, MotionEvent event) {
-
-        // bottom drawable is at index 3 of edit text drawables
-        final int DRAWABLE_BOTTOM = 3;
-        // note image click listener
-        if (event.getAction() == MotionEvent.ACTION_UP)
-            if (event.getRawX() >= (
-                    mView.editTextDescription.getBottom() -
-                            mView.editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width())
-                    && event.getRawX() <= mView.editTextDescription.getBottom()
-                    && event.getRawY() >= mView.editTextDescription.getBottom() -
-                    mView.editTextDescription.getCompoundDrawables()[DRAWABLE_BOTTOM].getBounds().width()) {
-                onImageTouch(v);
-            }
-    }
-
-    @Override
-    public void onImageTouch(View v) {
+    public void onImageClick(View v) {
         PopupMenu popup = new PopupMenu(v.getContext(), v);
         //Inflating the Popup using xml file
         popup.getMenuInflater()
@@ -158,12 +139,8 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
 
     @Override
     public void onDeleteImageClicked() {
-        mView.editTextDescription.setCompoundDrawablesWithIntrinsicBounds(null,
-                null,
-                null,
-                null);
-        // mNote.setImage(null);
-        mView.editTextDescription.setOnTouchListener(null);
+        mView.imageNote.setOnClickListener(null);
+        mView.imageNote.setImageDrawable(null);
     }
 
     @Override
@@ -174,10 +151,9 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
         builder.setContentView(R.layout.image_viewer);
         ImageView imageView = builder.findViewById(R.id.image_preview);
-        imageView.setImageBitmap(BitmapUtil.resize(mBitmap));
+        imageView.setImageBitmap(BitmapUtil.resize(mBitmap, 4f));
         builder.show();
     }
-
 
 }
 

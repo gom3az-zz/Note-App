@@ -3,7 +3,6 @@ package com.example.mg.todo.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.os.Environment;
 import android.util.Base64;
 
@@ -17,7 +16,8 @@ import java.util.Locale;
 public class BitmapUtil {
     public static String mCurrentPhotoPath;
 
-    public static String encodedImage(Bitmap bitmap) {
+    public static String encodedImage(Bitmap res) {
+        Bitmap bitmap = resize(res, .15f);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] b = byteArrayOutputStream.toByteArray();
@@ -46,33 +46,18 @@ public class BitmapUtil {
 
     public static Bitmap resamplePic(String imagePath) {
 
-        Matrix matrix = new Matrix();
-        matrix.postRotate(-90);
-        Bitmap bm = BitmapFactory.decodeFile(imagePath);
-        int newWidth = bm.getWidth();
-        int newHeight = bm.getHeight();
-        int dstWidth = (int) (newWidth * 0.15f); // scale to 15% from original size
-        int dstHeight = (int) (newHeight * 0.15f);
+        return BitmapFactory.decodeFile(imagePath);
 
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(
-                bm, dstWidth, dstHeight, true);
-        bm.recycle();
-        return Bitmap.createBitmap(scaledBitmap,
-                0,
-                0,
-                scaledBitmap.getWidth(),
-                scaledBitmap.getHeight(),
-                matrix,
-                true);
     }
 
-    public static Bitmap resize(Bitmap bm) {
+    public static Bitmap resize(Bitmap bm, float factor) {
         int newWidth = bm.getWidth();
         int newHeight = bm.getHeight();
-        int dstWidth = (int) (newWidth * 8f); // scale to 15% from original size
-        int dstHeight = (int) (newHeight * 8f);
+        int dstWidth = (int) (newWidth * factor); // scale to 15% from original size
+        int dstHeight = (int) (newHeight * factor);
 
         return Bitmap.createScaledBitmap(
                 bm, dstWidth, dstHeight, true);
     }
+
 }
