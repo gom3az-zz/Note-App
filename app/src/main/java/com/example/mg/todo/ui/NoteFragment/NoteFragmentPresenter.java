@@ -111,7 +111,7 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             mBitmap = BitmapUtil.resamplePic(mFileLocation);
-            mView.onImageAdded(mBitmap, .30f);
+            mView.onImageAdded(mBitmap, 1f);
         } else mView.onCancelImageCapture();
 
     }

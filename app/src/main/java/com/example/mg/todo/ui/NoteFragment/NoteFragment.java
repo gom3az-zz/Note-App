@@ -45,6 +45,8 @@ public class NoteFragment extends DialogFragment
     Button btnAddImage;
     @BindView(R.id.image_note)
     ImageView imageNote;
+    @BindView(R.id.btn_close_dialog)
+    Button btnCloseDialog;
 
     //private static final String TAG = "NoteFragment";
     private static final String KEY_UPDATED = "KEY_UPDATED";
@@ -88,6 +90,7 @@ public class NoteFragment extends DialogFragment
         unbinder = ButterKnife.bind(this, v);
         btnDone.setOnClickListener(this);
         btnAddImage.setOnClickListener(this);
+        btnCloseDialog.setOnClickListener(this);
         mPresenter = new NoteFragmentPresenter(this, mNote);
 
         return v;
@@ -98,6 +101,7 @@ public class NoteFragment extends DialogFragment
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        getDialog().getWindow().setWindowAnimations(R.style.dialog_slide_animation);
         if (savedInstanceState != null) {
             mUpdated = savedInstanceState.getInt(KEY_UPDATED);
             mNote = savedInstanceState.getParcelable(KEY_NOTE_MODEL);
@@ -130,6 +134,7 @@ public class NoteFragment extends DialogFragment
         // opens a media store broker to take image
         if (view.getId() == R.id.btn_done) mPresenter.onDoneClick();
         else if (view.getId() == R.id.image_note) mPresenter.onImageClick(view);
+        else if (view.getId() == R.id.btn_close_dialog) this.dismiss();
         else mPresenter.onTakeImageClick();
 
     }

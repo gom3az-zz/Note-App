@@ -16,8 +16,7 @@ import java.util.Locale;
 public class BitmapUtil {
     public static String mCurrentPhotoPath;
 
-    public static String encodedImage(Bitmap res) {
-        Bitmap bitmap = resize(res, .15f);
+    public static String encodedImage(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] b = byteArrayOutputStream.toByteArray();
@@ -45,9 +44,7 @@ public class BitmapUtil {
     }
 
     public static Bitmap resamplePic(String imagePath) {
-
-        return BitmapFactory.decodeFile(imagePath);
-
+        return resize(BitmapFactory.decodeFile(imagePath), .15f);
     }
 
     public static Bitmap resize(Bitmap bm, float factor) {

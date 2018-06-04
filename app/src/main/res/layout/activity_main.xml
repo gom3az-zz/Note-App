@@ -12,7 +12,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        app:titleTextColor="@color/cardview_light_background">
 
         <TextView
             android:id="@+id/text_selected_count"
@@ -39,6 +40,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:src="?android:attr/actionModePasteDrawable"
+        android:tint="@color/cardview_light_background"
         app:backgroundTint="@color/colorPrimary" />
 
 </RelativeLayout>
