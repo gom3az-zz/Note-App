@@ -3,8 +3,6 @@ package com.example.mg.todo.ui.NoteFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,10 +10,10 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -51,6 +49,8 @@ public class NoteFragment extends DialogFragment
     //private static final String TAG = "NoteFragment";
     private static final String KEY_UPDATED = "KEY_UPDATED";
     private static final String KEY_NOTE_MODEL = "KEY_NOTE_MODEL";
+    @BindView(R.id.relative)
+    LinearLayout relativeLayout;
 
     private NoteFragmentPresenter mPresenter;
     private Unbinder unbinder;
@@ -80,8 +80,7 @@ public class NoteFragment extends DialogFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
-
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.dialog_slide_animation);
     }
 
     @Override
@@ -92,16 +91,15 @@ public class NoteFragment extends DialogFragment
         btnAddImage.setOnClickListener(this);
         btnCloseDialog.setOnClickListener(this);
         mPresenter = new NoteFragmentPresenter(this, mNote);
-
         return v;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        getDialog().getWindow().setWindowAnimations(R.style.dialog_slide_animation);
+        Objects.requireNonNull(getDialog()
+                .getWindow())
+                .setWindowAnimations(R.style.dialog_slide_animation);
         if (savedInstanceState != null) {
             mUpdated = savedInstanceState.getInt(KEY_UPDATED);
             mNote = savedInstanceState.getParcelable(KEY_NOTE_MODEL);
@@ -142,7 +140,6 @@ public class NoteFragment extends DialogFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mPresenter.onActivityResult(requestCode, resultCode, data);
-
     }
 
     @Override
@@ -157,7 +154,7 @@ public class NoteFragment extends DialogFragment
 
     @Override
     public void onCancelImageCapture() {
-        Toast.makeText(this.getContext(), "request canceled", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "request canceled", Toast.LENGTH_SHORT).show();
     }
 
     @Override

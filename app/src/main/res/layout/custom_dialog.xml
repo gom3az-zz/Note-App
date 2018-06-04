@@ -16,8 +16,8 @@
 
         <Button
             android:id="@+id/btn_close_dialog"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="center"
             android:background="@drawable/ic_remove"
             android:backgroundTint="@color/lightColor" />

@@ -13,12 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme"
         app:titleTextColor="@color/cardview_light_background">
 
-        <TextView
-            android:id="@+id/text_selected_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
@@ -27,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:layout_alignParentStart="true"
+        android:animateLayoutChanges="false"
         android:background="@color/lightColor"
         android:orientation="vertical"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager" />

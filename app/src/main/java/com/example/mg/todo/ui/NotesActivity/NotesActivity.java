@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
@@ -35,8 +34,6 @@ public class NotesActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     public
     Toolbar toolbar;
-    @BindView(R.id.text_selected_count)
-    public TextView selectedCount;
     @BindView(R.id.relative_layout)
     RelativeLayout relativeLayout;
 

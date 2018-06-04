@@ -6,10 +6,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/cardview_light_background</item>
+        <item name="actionMenuTextColor">@color/cardview_light_background</item>
+        <item name="android:textColorPrimary">@color/cardview_light_background</item>
+
+
     </style>
 
     <style name="dialog_slide_animation">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">stateVisible</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
+
 </resources>
