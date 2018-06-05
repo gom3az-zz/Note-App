@@ -1,5 +1,6 @@
 package com.example.mg.todo.utils;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -51,6 +52,7 @@ public class NotesRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+        //final Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bounce);
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -58,6 +60,8 @@ public class NotesRecyclerViewAdapter
                 holder.radioButton.setVisibility(
                         holder.radioButton.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                 holder.radioButton.setChecked(!holder.radioButton.isChecked());
+                doBounceAnimation(holder.itemView);
+                //holder.itemView.startAnimation(animation);
                 return itemLongClickListener.onItemLongClicked(holder.getAdapterPosition());
             }
         });
@@ -119,6 +123,13 @@ public class NotesRecyclerViewAdapter
 
     public interface OnItemClickListener {
         void onItemClicked(int position);
+    }
+
+    private void doBounceAnimation(View targetView) {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(targetView, "translationX", 0, 25, 0);
+        animator.setStartDelay(0);
+        animator.setDuration(300);
+        animator.start();
     }
 
 }
