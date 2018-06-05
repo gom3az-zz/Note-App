@@ -5,9 +5,11 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
@@ -15,9 +17,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.utils.BitmapUtil;
+import com.example.mg.todo.utils.DataFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +32,7 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
+
 @SuppressLint("ClickableViewAccessibility")
 public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     private static final int REQUEST_CODE = 19;
@@ -35,13 +40,21 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     private NoteModel mNote;
     private String mFileLocation;
     private Bitmap mBitmap;
+    private DataFragment dataFragment;
 
     NoteFragmentPresenter(NoteFragment mView, NoteModel data) {
         this.mView = mView;
         this.mNote = data;
+
+        FragmentManager fm = mView.getFragmentManager();
+        dataFragment = (DataFragment) Objects.requireNonNull(fm).findFragmentByTag("data");
+        // create the fragment and data the first time
+        if (dataFragment == null) {
+            dataFragment = new DataFragment();
+            fm.beginTransaction().add(dataFragment, "data").commit();
+        }
     }
 
-    //todo fix image when rotating gone
     @Override
     public void initFragmentData() {
         // if user clicked on a note to update it it calls this function to update the ui of the fragment
@@ -58,6 +71,30 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     }
 
     @Override
+    public void onSaveInstanceState() {
+        dataFragment.setmUpdated(NoteFragment.mUpdated);
+        dataFragment.setData(mNote);
+        if (mView.imageNote.getDrawable() != null) {
+            String s = BitmapUtil.encodeDrawable(mView.imageNote.getDrawable());
+            dataFragment.setTempImage(s);
+        }
+
+    }
+
+    @Override
+    public void onRestoreState() {
+        NoteFragment.mUpdated = dataFragment.getmUpdated();
+        mNote = dataFragment.getData();
+        String currentImage = dataFragment.getTempImage();
+        if (currentImage != null) {
+            Glide.with(Objects.requireNonNull(mView.getContext()))
+                    .asBitmap()
+                    .load(BitmapUtil.decodeImage(currentImage))
+                    .into(mView.imageNote);
+        }
+    }
+
+    @Override
     public void onDoneClick() {
         String title = mView.editTextTitle.getText().toString();
         String description = mView.editTextDescription.getText().toString();
@@ -65,7 +102,7 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
         else {
             mNote.setText(title);
             mNote.setDescription(description);
-            if (mView.mUpdated != -1) // check if the note is newly added or an edited one
+            if (NoteFragment.mUpdated != -1) // check if the note is newly added or an edited one
                 mNote.setmDate(String.format("Edited on: %s",
                         new SimpleDateFormat("EEE, MMM d, ''yy hh:mm aaa",
                                 Locale.getDefault()).format(new Date())));
@@ -76,9 +113,9 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
             // check if there is an image on edit text to add it into database
             // else if user took an image and then delete it so we delete it
             if (mView.imageNote.getDrawable() != null)
-                mNote.setImage(BitmapUtil.encodedImage(mBitmap));
+                mNote.setImage(BitmapUtil.encodeDrawable(mView.imageNote.getDrawable()));
             else mNote.setImage(null);
-            mView.mSendNote.sendNoteObject(mNote, mView.mUpdated);
+            mView.mSendNote.sendNoteObject(mNote, NoteFragment.mUpdated);
             mView.getDialog().dismiss();
         }
     }
@@ -112,8 +149,10 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             mBitmap = BitmapUtil.resamplePic(mFileLocation);
             mView.onImageAdded(mBitmap, 1f);
-        } else mView.onCancelImageCapture();
-
+        } else {
+            mNote.setImage(BitmapUtil.encodeDrawable(mView.imageNote.getDrawable()));
+            mView.onCancelImageCapture();
+        }
     }
 
     @Override
@@ -140,8 +179,9 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     @Override
     public void onDeleteImageClicked() {
         mView.imageNote.setOnClickListener(null);
-        mView.imageNote.setImageDrawable(null);
+        mView.imageNote.setImageResource(0);
     }
+
 
     @Override
     public void onViewImageClicked() {
@@ -151,7 +191,8 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
         builder.setContentView(R.layout.image_viewer);
         ImageView imageView = builder.findViewById(R.id.image_preview);
-        imageView.setImageBitmap(BitmapUtil.resize(mBitmap, 4f));
+        Bitmap bitmap = ((BitmapDrawable) mView.imageNote.getDrawable()).getBitmap();
+        imageView.setImageBitmap(BitmapUtil.resize(bitmap, 2f));
         builder.show();
     }
 

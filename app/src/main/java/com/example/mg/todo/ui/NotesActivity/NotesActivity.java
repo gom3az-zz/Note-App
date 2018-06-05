@@ -66,8 +66,8 @@ public class NotesActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
-        // refWatcher.watch(this);
+/*         RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
+         refWatcher.watch(this);*/
     }
 
     @Override

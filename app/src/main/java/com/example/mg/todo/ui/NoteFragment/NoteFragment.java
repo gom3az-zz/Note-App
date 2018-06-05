@@ -47,8 +47,8 @@ public class NoteFragment extends DialogFragment
     Button btnCloseDialog;
 
     //private static final String TAG = "NoteFragment";
-    private static final String KEY_UPDATED = "KEY_UPDATED";
-    private static final String KEY_NOTE_MODEL = "KEY_NOTE_MODEL";
+    public static int mUpdated;
+
     @BindView(R.id.relative)
     LinearLayout relativeLayout;
 
@@ -56,7 +56,7 @@ public class NoteFragment extends DialogFragment
     private Unbinder unbinder;
     private NoteModel mNote;
     public ISendNoteObject mSendNote;
-    public int mUpdated;
+
 
     public NoteFragment() {
     }
@@ -90,6 +90,7 @@ public class NoteFragment extends DialogFragment
         btnDone.setOnClickListener(this);
         btnAddImage.setOnClickListener(this);
         btnCloseDialog.setOnClickListener(this);
+        imageNote.setOnClickListener(this);
         mPresenter = new NoteFragmentPresenter(this, mNote);
         return v;
     }
@@ -101,19 +102,16 @@ public class NoteFragment extends DialogFragment
                 .getWindow())
                 .setWindowAnimations(R.style.dialog_slide_animation);
         if (savedInstanceState != null) {
-            mUpdated = savedInstanceState.getInt(KEY_UPDATED);
-            mNote = savedInstanceState.getParcelable(KEY_NOTE_MODEL);
+            mPresenter.onRestoreState();
         }
-        //update the ui of the fragment to the opened note by user
-        // transforming mBitmap into drawable to display it on edit text
         mPresenter.initFragmentData();
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_UPDATED, mUpdated);
-        outState.putParcelable(KEY_NOTE_MODEL, mNote);
+        mPresenter.onSaveInstanceState();
     }
 
     @Override
@@ -149,12 +147,12 @@ public class NoteFragment extends DialogFragment
                 .asBitmap()
                 .load(bm)
                 .into(imageNote);
-        imageNote.setOnClickListener(this);
     }
 
     @Override
     public void onCancelImageCapture() {
         Toast.makeText(getContext(), "request canceled", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

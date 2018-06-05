@@ -1,5 +1,6 @@
 package com.example.mg.todo.data;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 
 import com.example.mg.todo.data.model.NoteModel;
@@ -23,6 +24,7 @@ public class DataProvider {
     // TODO: 5/28/2018 change shared pref data storage to sqlite
     // storing array of object as a string into shared pref
     //
+    @SuppressLint("CommitPrefEdits")
     public DataProvider(SharedPreferences sharedPreferences, NotesPresenter notesPresenter) {
         dataSetOperations = notesPresenter;
         editor = sharedPreferences.edit();

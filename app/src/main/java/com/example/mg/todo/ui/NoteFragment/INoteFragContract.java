@@ -29,6 +29,10 @@ public interface INoteFragContract {
         void onViewImageClicked();
 
         void onDeleteImageClicked();
+
+        void onSaveInstanceState();
+
+        void onRestoreState();
     }
 }
 

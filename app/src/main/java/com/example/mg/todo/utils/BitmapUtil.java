@@ -3,6 +3,8 @@ package com.example.mg.todo.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Base64;
 
@@ -41,6 +43,14 @@ public class BitmapUtil {
 
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    public static String encodeDrawable(Drawable d) {
+        Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] bitmapdata = stream.toByteArray();
+        return Base64.encodeToString(bitmapdata, Base64.DEFAULT);
     }
 
     public static Bitmap resamplePic(String imagePath) {
