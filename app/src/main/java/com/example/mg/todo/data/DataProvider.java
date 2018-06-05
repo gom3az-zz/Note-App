@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DataProvider {
     private SharedPreferences.Editor editor;
-    private final String KEY_NEW_NOTE = "NEW_NOTE9";
+    private final String KEY_NEW_NOTE = "NEW_NOTE20";
     private NotesPresenter mPresenter;
     private Gson gson = new Gson();
     private String json;

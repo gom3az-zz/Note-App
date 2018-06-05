@@ -16,7 +16,7 @@
     <style name="dialog_slide_animation">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:windowSoftInputMode">stateVisible</item>
-        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowFullscreen">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
