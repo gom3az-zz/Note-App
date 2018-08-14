@@ -9,6 +9,7 @@
         <item name="android:textColor">@color/cardview_light_background</item>
         <item name="actionMenuTextColor">@color/cardview_light_background</item>
         <item name="android:textColorPrimary">@color/cardview_light_background</item>
+        <item name="windowActionModeOverlay">true</item>
 
 
     </style>

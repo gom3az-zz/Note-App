@@ -1,8 +1,6 @@
 package com.example.mg.todo.ui.NotesActivity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -11,12 +9,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
+import com.example.mg.todo.App;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
+import com.example.mg.todo.ui.DaggerINoteActivityComponent;
+import com.example.mg.todo.ui.NoteActivityModule;
 import com.example.mg.todo.ui.NoteFragment.NoteFragment;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,8 +41,10 @@ public class NotesActivity extends AppCompatActivity
     @BindView(R.id.relative_layout)
     RelativeLayout relativeLayout;
 
-    private NotesPresenter mPresenter;
+    @Inject
+    NotesPresenter mPresenter;
     public MenuItem menuItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +52,10 @@ public class NotesActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mPresenter = new NotesPresenter(this, sharedPreferences);
+        DaggerINoteActivityComponent.builder()
+                .iAppComponent(App.get(this).geAppComponent())
+                .noteActivityModule(new NoteActivityModule(this))
+                .build().inject(this);
 
     }
 
@@ -66,13 +74,12 @@ public class NotesActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-/*         RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
-         refWatcher.watch(this);*/
+        RefWatcher refWatcher = App.getRefWatcher(getBaseContext());
+        refWatcher.watch(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
         menuItem = menu.findItem(R.id.delete);
         return true;
@@ -110,7 +117,7 @@ public class NotesActivity extends AppCompatActivity
     }
 
     @Override
-    public void removeMessage(int size) {
+    public void noteRemoved(int size) {
         String message = size > 1 ? "Notes were removed!" : "Note was removed!";
         Snackbar.make(relativeLayout, String.format(Locale.getDefault(), "%d %s", size, message),
                 Snackbar.LENGTH_SHORT)

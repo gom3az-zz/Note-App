@@ -2,9 +2,11 @@ package com.example.mg.todo.ui.NotesActivity;
 
 import com.example.mg.todo.data.model.NoteModel;
 
+import java.util.List;
+
 public interface INotesContract {
     interface IView {
-        void removeMessage(int size);
+        void noteRemoved(int size);
 
         void noteAdded();
 
@@ -27,6 +29,20 @@ public interface INotesContract {
 
         void onStop();
 
+    }
+
+    interface IDate {
+        void updateDataSet();
+
+        void addNote(NoteModel newNote);
+
+        void updateNote(NoteModel newNote, int mUpdated);
+
+        void removeNote(int position);
+
+        NoteModel getNote(int position);
+
+        List<NoteModel> getDataModels();
     }
 }
 

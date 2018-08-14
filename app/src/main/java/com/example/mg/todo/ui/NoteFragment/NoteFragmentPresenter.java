@@ -157,23 +157,25 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
 
     @Override
     public void onImageClick(View v) {
-        PopupMenu popup = new PopupMenu(v.getContext(), v);
-        //Inflating the Popup using xml file
-        popup.getMenuInflater()
-                .inflate(R.menu.popup_menu, popup.getMenu());
+        if (mNote.getImage() != null) {
+            PopupMenu popup = new PopupMenu(v.getContext(), v);
+            //Inflating the Popup using xml file
+            popup.getMenuInflater()
+                    .inflate(R.menu.popup_menu, popup.getMenu());
 
-        //deletes image if user clicked delete button from menu
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.delete) {
-                    onDeleteImageClicked();
-                } else if (item.getItemId() == R.id.view) {
-                    onViewImageClicked();
+            //deletes image if user clicked delete button from menu
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == R.id.delete) {
+                        onDeleteImageClicked();
+                    } else if (item.getItemId() == R.id.view) {
+                        onViewImageClicked();
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
-        popup.show();
+            });
+            popup.show();
+        }
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.example.mg.todo.ui.NotesActivity;
 
-import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 
 import com.example.mg.todo.data.DataProvider;
 import com.example.mg.todo.data.model.NoteModel;
+import com.example.mg.todo.ui.INoteActivityScope;
 import com.example.mg.todo.ui.NoteFragment.NoteFragment;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
 
@@ -13,16 +13,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NotesPresenter implements INotesContract.IPresenter, DataProvider.DataSetOperations {
-    private NotesActivity mView;
-    private DataProvider data;
-    public NotesRecyclerViewAdapter notesRecyclerViewAdapter;
+import javax.inject.Inject;
+
+@INoteActivityScope
+public class NotesPresenter implements INotesContract.IPresenter {
+    private final NotesActivity mView;
+    private final DataProvider data;
+    private NotesRecyclerViewAdapter notesRecyclerViewAdapter;
     private List<String> mSelectedNotes = new ArrayList<>();
     //private static final String TAG = "NotesPresenter";
 
-    NotesPresenter(NotesActivity mView, SharedPreferences sharedPreferences) {
+    @Inject
+    NotesPresenter(NotesActivity mView, DataProvider dataProvider) {
         this.mView = mView;
-        data = new DataProvider(sharedPreferences, this);
+        this.data = dataProvider;
     }
 
     @Override
@@ -67,8 +71,8 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
     // if it equals to -1 then it means its a new note else its an updated note
     @Override
     public void onNoteDoneClick(NoteModel newNote, int mUpdated) {
-        if (mUpdated == -1) data.addNote(newNote);
-        else data.updateNote(newNote, mUpdated);
+        if (mUpdated == -1) onAdd(newNote);
+        else onUpdate(newNote, mUpdated);
 
         mView.menuItem.setVisible(false);
         if (mSelectedNotes != null) mSelectedNotes.clear();
@@ -80,36 +84,37 @@ public class NotesPresenter implements INotesContract.IPresenter, DataProvider.D
         Collections.sort(mSelectedNotes);
         Collections.reverse(mSelectedNotes);
         for (String str : mSelectedNotes) {
-            data.removeNote(Integer.valueOf(str));
+            onRemove(Integer.valueOf(str));
         }
         mView.menuItem.setVisible(false);
-        mView.removeMessage(mSelectedNotes.size());
+        mView.noteRemoved(mSelectedNotes.size());
         mSelectedNotes.clear();
     }
 
-    @Override
-    public void onAdd(int position) {
-        notesRecyclerViewAdapter.notifyItemInserted(position);
+    private void onAdd(NoteModel position) {
+        data.addNote(position);
         data.updateDataSet();
+        notesRecyclerViewAdapter.notifyDataSetChanged();
         mView.noteAdded();
     }
 
-    @Override
-    public void onUpdate(int position) {
-        notesRecyclerViewAdapter.notifyItemChanged(position);
+    private void onUpdate(NoteModel newNote, int position) {
+        data.updateNote(newNote, position);
         data.updateDataSet();
         mView.noteUpdated();
+        notesRecyclerViewAdapter.notifyItemChanged(position);
     }
 
-    @Override
-    public void onRemove(int position) {
-        notesRecyclerViewAdapter.notifyItemRemoved(position);
+    private void onRemove(int position) {
+        data.removeNote(position);
         data.updateDataSet();
+        notesRecyclerViewAdapter.notifyItemRemoved(position);
     }
 
     @Override
     public void onStop() {
         mView.todoList.setAdapter(null);
+        mSelectedNotes = null;
     }
 }
 

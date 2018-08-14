@@ -35,14 +35,14 @@ public class BitmapUtil {
 
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
+        File file = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
 
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
+        mCurrentPhotoPath = file.getAbsolutePath();
+        return file;
     }
 
     public static String encodeDrawable(Drawable d) {

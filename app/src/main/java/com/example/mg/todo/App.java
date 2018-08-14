@@ -1,14 +1,24 @@
 package com.example.mg.todo;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
-import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 public class App extends Application {
     private RefWatcher mRefWatcher;
+    private IAppComponent mComponent;
+
+    public IAppComponent geAppComponent() {
+        return mComponent;
+    }
+
+    public static App get(Activity activity) {
+        return (App) activity.getApplication();
+    }
+
 
     public static RefWatcher getRefWatcher(Context context) {
         App application = (App) context.getApplicationContext();
@@ -18,12 +28,22 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (BuildConfig.DEBUG) {
-            Stetho.initializeWithDefaults(this);
-        }
+        initLeakCanary();
+        initDagger();
+    }
+
+    private void initDagger() {
+        appModule module= new appModule(this);
+        mComponent = DaggerIAppComponent.builder()
+                .appModule(module)
+                .build();
+        mComponent.inject(this);
+
+    }
+
+    private void initLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not initFragmentData your app in this process.
+
             return;
         }
         mRefWatcher = LeakCanary.install(this);
