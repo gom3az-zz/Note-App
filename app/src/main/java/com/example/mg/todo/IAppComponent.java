@@ -1,7 +1,7 @@
 package com.example.mg.todo;
 
 import com.bumptech.glide.RequestManager;
-import com.example.mg.todo.data.model.PrefrenceHelper;
+import com.example.mg.todo.data.PrefrenceHelper;
 
 import dagger.Component;
 

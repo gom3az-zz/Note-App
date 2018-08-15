@@ -43,7 +43,7 @@ public class NotesActivity extends AppCompatActivity
 
     @Inject
     NotesPresenter mPresenter;
-    public MenuItem menuItem;
+    MenuItem menuItem;
 
 
     @Override
@@ -62,7 +62,7 @@ public class NotesActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.initMainRecyclerData();
+        mPresenter.onResume();
     }
 
     @Override

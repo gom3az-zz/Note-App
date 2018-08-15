@@ -39,7 +39,7 @@ public class NotesRecyclerViewAdapter
         this.glide = glide;
     }
 
-    public void setAll(List<NoteModel> values) {
+    public void setData(List<NoteModel> values) {
         mValues = values;
     }
 

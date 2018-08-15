@@ -23,7 +23,7 @@ public interface INotesContract {
 
         void onNoteDoneClick(NoteModel newNote, int mUpdated);
 
-        void initMainRecyclerData();
+        void onResume();
 
         void onRemoveClicked();
 

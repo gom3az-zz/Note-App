@@ -18,38 +18,42 @@ import javax.inject.Inject;
 @INoteActivityScope
 public class NotesPresenter implements INotesContract.IPresenter {
     private final NotesActivity mView;
-    private final DataProvider data;
-    private NotesRecyclerViewAdapter notesRecyclerViewAdapter;
+    private final DataProvider mDataProvider;
+    private NotesRecyclerViewAdapter mNotesAdapter;
     private List<String> mSelectedNotes;
     //private static final String TAG = "NotesPresenter";
 
     @Inject
     NotesPresenter(NotesActivity mView, DataProvider dataProvider, NotesRecyclerViewAdapter adapter) {
         this.mView = mView;
-        this.data = dataProvider;
-        this.notesRecyclerViewAdapter = adapter;
+        this.mDataProvider = dataProvider;
+        this.mNotesAdapter = adapter;
         mSelectedNotes = new ArrayList<>();
     }
 
     @Override
-    public void initMainRecyclerData() {
-        // initFragmentData home recycler view with data saved at shared pref
-        notesRecyclerViewAdapter.setAll(data.getDataModels());
+    public void onResume() {
+        // initFragmentData home recycler view with mDataProvider saved at shared pref
+        mNotesAdapter.setData(mDataProvider.getDataModels());
         mView.todoList.setItemAnimator(new DefaultItemAnimator());
-        mView.todoList.setAdapter(notesRecyclerViewAdapter);
-        if (mView.menuItem != null) mView.menuItem.setVisible(false);
-        if (mSelectedNotes != null) mSelectedNotes.clear();
+        mView.todoList.setAdapter(mNotesAdapter);
+    }
+
+    @Override
+    public void onStop() {
+        mView.todoList.setAdapter(null);
     }
 
     @Override
     public void onItemClick(int position) {
-        NoteModel note = data.getNote(position);
+        NoteModel note = mDataProvider.getNote(position);
         onNoteClick(note, position);
     }
 
     @Override
     public boolean onItemLongClick(int location) {
         String position = String.valueOf(location);
+
         if (mSelectedNotes.contains(position)) mSelectedNotes.remove(position);
         else mSelectedNotes.add(position);
 
@@ -83,13 +87,13 @@ public class NotesPresenter implements INotesContract.IPresenter {
 
     @Override
     public void onRemoveClicked() {
+        //removing notes in reverse order for better ui translation
         Collections.sort(mSelectedNotes);
         Collections.reverse(mSelectedNotes);
         for (String str : mSelectedNotes) {
-            data.removeNote(Integer.valueOf(str));
-            notesRecyclerViewAdapter.notifyItemRemoved(Integer.valueOf(str));
+            mDataProvider.removeNote(Integer.valueOf(str));
+            mNotesAdapter.notifyItemRemoved(Integer.valueOf(str));
         }
-        data.updateDataSet();
         mView.menuItem.setVisible(false);
         mView.noteRemoved(mSelectedNotes.size());
         mSelectedNotes.clear();
@@ -97,24 +101,17 @@ public class NotesPresenter implements INotesContract.IPresenter {
 
     @Override
     public void onAdd(NoteModel position) {
-        data.addNote(position);
-        data.updateDataSet();
+        mDataProvider.addNote(position);
         mView.noteAdded();
-        notesRecyclerViewAdapter.notifyDataSetChanged();
+        mNotesAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onUpdate(NoteModel newNote, int position) {
-        data.updateNote(newNote, position);
-        data.updateDataSet();
+        mDataProvider.updateNote(newNote, position);
         mView.noteUpdated();
-        notesRecyclerViewAdapter.notifyItemChanged(position);
+        mNotesAdapter.notifyItemChanged(position);
     }
 
-    @Override
-    public void onStop() {
-        mView.todoList.setAdapter(null);
-        mSelectedNotes = null;
-    }
 }
 

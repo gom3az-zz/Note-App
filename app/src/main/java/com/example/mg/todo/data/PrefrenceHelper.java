@@ -1,10 +1,11 @@
-package com.example.mg.todo.data.model;
+package com.example.mg.todo.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.mg.todo.IAppContext;
 import com.example.mg.todo.IAppScope;
+import com.example.mg.todo.data.model.NoteModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -16,14 +17,15 @@ import javax.inject.Inject;
 @IAppScope
 public class PrefrenceHelper implements IPrefHelper {
 
-    private static final String KEY_SHARED_PREF = "todo_app";
+    private static final String KEY_SHARED_PREF = "todo_app7";
     private SharedPreferences sharedPreferences;
-    private Gson gson = new Gson();
+    private Gson gson;
     private String json;
 
     @Inject
-    public PrefrenceHelper(@IAppContext Context context) {
+    PrefrenceHelper(@IAppContext Context context) {
         sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREF, Context.MODE_PRIVATE);
+        gson = new Gson();
     }
 
     @Override

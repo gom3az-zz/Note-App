@@ -1,7 +1,6 @@
 package com.example.mg.todo.data;
 
 import com.example.mg.todo.data.model.NoteModel;
-import com.example.mg.todo.data.model.PrefrenceHelper;
 import com.example.mg.todo.ui.NotesActivity.DI.INoteActivityScope;
 import com.example.mg.todo.ui.NotesActivity.INotesContract;
 
@@ -27,24 +26,20 @@ public class DataProvider implements INotesContract.IDate {
 
     @Override
     public void addNote(NoteModel newNote) {
-        try {
-            mNoteModels.add(newNote);
-        } catch (NullPointerException e) {
-            // first note
-            mNoteModels = new ArrayList<>();
-            mNoteModels.add(newNote);
-        }
-
+        mNoteModels.add(newNote);
+        updateDataSet();
     }
 
     @Override
     public void updateNote(NoteModel newNote, int mUpdated) {
         mNoteModels.set(mUpdated, newNote);
+        updateDataSet();
     }
 
     @Override
     public void removeNote(int position) {
         mNoteModels.remove(position);
+        updateDataSet();
     }
 
     @Override
@@ -54,12 +49,9 @@ public class DataProvider implements INotesContract.IDate {
 
     @Override
     public List<NoteModel> getDataModels() {
-        mNoteModels = prefrenceHelper.getSavedData();
-        try {
-            return mNoteModels;
-        } catch (NullPointerException ignored) {
-            return new ArrayList<>(0);
-        }
+        mNoteModels = prefrenceHelper.getSavedData() != null ?
+                prefrenceHelper.getSavedData() : new ArrayList<NoteModel>();
+        return mNoteModels;
     }
 }
 

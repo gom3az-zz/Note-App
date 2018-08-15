@@ -5,8 +5,8 @@ import android.content.Context;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.example.mg.todo.data.model.IPrefHelper;
-import com.example.mg.todo.data.model.PrefrenceHelper;
+import com.example.mg.todo.data.IPrefHelper;
+import com.example.mg.todo.data.PrefrenceHelper;
 
 import dagger.Module;
 import dagger.Provides;

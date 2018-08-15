@@ -156,7 +156,7 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
             mBitmap = BitmapUtil.resamplePic(mFileLocation);
             mView.onImageAdded(mBitmap, 1f);
         } else {
-            mNote.setImage(BitmapUtil.encodeDrawable(mView.imageNote.getDrawable()));
+            //mNote.setImage(BitmapUtil.encodeDrawable(mView.imageNote.getDrawable()));
             mView.onCancelImageCapture();
         }
     }
