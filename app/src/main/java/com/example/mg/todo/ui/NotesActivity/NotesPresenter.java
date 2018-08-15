@@ -5,8 +5,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 
 import com.example.mg.todo.data.DataProvider;
 import com.example.mg.todo.data.model.NoteModel;
-import com.example.mg.todo.ui.INoteActivityScope;
 import com.example.mg.todo.ui.NoteFragment.NoteFragment;
+import com.example.mg.todo.ui.NotesActivity.DI.INoteActivityScope;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -24,15 +24,16 @@ public class NotesPresenter implements INotesContract.IPresenter {
     //private static final String TAG = "NotesPresenter";
 
     @Inject
-    NotesPresenter(NotesActivity mView, DataProvider dataProvider) {
+    NotesPresenter(NotesActivity mView, DataProvider dataProvider, NotesRecyclerViewAdapter adapter) {
         this.mView = mView;
         this.data = dataProvider;
+        this.notesRecyclerViewAdapter = adapter;
     }
 
     @Override
     public void initMainRecyclerData() {
         // initFragmentData home recycler view with data saved at shared pref
-        notesRecyclerViewAdapter = new NotesRecyclerViewAdapter(mView, data.getDataModels());
+        notesRecyclerViewAdapter.setAll(data.getDataModels());
         mView.todoList.setItemAnimator(new DefaultItemAnimator());
         mView.todoList.setAdapter(notesRecyclerViewAdapter);
         if (mView.menuItem != null) mView.menuItem.setVisible(false);
@@ -84,31 +85,29 @@ public class NotesPresenter implements INotesContract.IPresenter {
         Collections.sort(mSelectedNotes);
         Collections.reverse(mSelectedNotes);
         for (String str : mSelectedNotes) {
-            onRemove(Integer.valueOf(str));
+            data.removeNote(Integer.valueOf(str));
+            notesRecyclerViewAdapter.notifyItemRemoved(Integer.valueOf(str));
         }
+        data.updateDataSet();
         mView.menuItem.setVisible(false);
         mView.noteRemoved(mSelectedNotes.size());
         mSelectedNotes.clear();
     }
 
-    private void onAdd(NoteModel position) {
+    @Override
+    public void onAdd(NoteModel position) {
         data.addNote(position);
         data.updateDataSet();
-        notesRecyclerViewAdapter.notifyDataSetChanged();
         mView.noteAdded();
+        notesRecyclerViewAdapter.notifyDataSetChanged();
     }
 
-    private void onUpdate(NoteModel newNote, int position) {
+    @Override
+    public void onUpdate(NoteModel newNote, int position) {
         data.updateNote(newNote, position);
         data.updateDataSet();
         mView.noteUpdated();
         notesRecyclerViewAdapter.notifyItemChanged(position);
-    }
-
-    private void onRemove(int position) {
-        data.removeNote(position);
-        data.updateDataSet();
-        notesRecyclerViewAdapter.notifyItemRemoved(position);
     }
 
     @Override

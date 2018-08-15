@@ -16,12 +16,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.example.mg.todo.App;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
+import com.example.mg.todo.ui.NoteFragment.DI.DaggerINoteFragmentComponent;
+import com.example.mg.todo.ui.NoteFragment.DI.NoteFragmentModule;
 import com.example.mg.todo.utils.BitmapUtil;
 
 import java.util.Objects;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +57,12 @@ public class NoteFragment extends DialogFragment
     @BindView(R.id.relative)
     LinearLayout relativeLayout;
 
-    private NoteFragmentPresenter mPresenter;
+    @Inject
+    NoteFragmentPresenter mPresenter;
+
+    @Inject
+    RequestManager glide;
+
     private Unbinder unbinder;
     private NoteModel mNote;
     public ISendNoteObject mSendNote;
@@ -62,7 +72,7 @@ public class NoteFragment extends DialogFragment
     }
 
     public void setModel(NoteModel model, int position) {
-        this.mNote = model;
+        mNote = model;
         mUpdated = position;
     }
 
@@ -81,6 +91,12 @@ public class NoteFragment extends DialogFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.dialog_slide_animation);
+
+        DaggerINoteFragmentComponent.builder()
+                .iAppComponent(App.get(getActivity()).geAppComponent())
+                .noteFragmentModule(new NoteFragmentModule(this))
+                .build().inject(this);
+
     }
 
     @Override
@@ -91,7 +107,6 @@ public class NoteFragment extends DialogFragment
         btnAddImage.setOnClickListener(this);
         btnCloseDialog.setOnClickListener(this);
         imageNote.setOnClickListener(this);
-        mPresenter = new NoteFragmentPresenter(this, mNote);
         return v;
     }
 
@@ -104,7 +119,7 @@ public class NoteFragment extends DialogFragment
         if (savedInstanceState != null) {
             mPresenter.onRestoreState();
         }
-        mPresenter.initFragmentData();
+        mPresenter.initFragmentData(mNote);
 
     }
 
@@ -118,6 +133,8 @@ public class NoteFragment extends DialogFragment
     public void onDetach() {
         super.onDetach();
         unbinder.unbind();
+        glide = null;
+        mPresenter = null;
         this.dismiss();
     }
 
@@ -143,8 +160,7 @@ public class NoteFragment extends DialogFragment
     @Override
     public void onImageAdded(Bitmap mBitmap, float factor) {
         Bitmap bm = BitmapUtil.resize(mBitmap, factor);
-        Glide.with(Objects.requireNonNull(getContext()))
-                .asBitmap()
+        glide.asBitmap()
                 .load(bm)
                 .into(imageNote);
     }

@@ -17,9 +17,10 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
+import com.example.mg.todo.ui.NoteFragment.DI.IFragmentScope;
 import com.example.mg.todo.utils.BitmapUtil;
 import com.example.mg.todo.utils.DataFragment;
 
@@ -30,21 +31,26 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import static android.app.Activity.RESULT_OK;
 
 
 @SuppressLint("ClickableViewAccessibility")
+@IFragmentScope
 public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     private static final int REQUEST_CODE = 19;
-    private NoteFragment mView;
+    private final NoteFragment mView;
+    private final RequestManager glide;
     private NoteModel mNote;
     private String mFileLocation;
     private Bitmap mBitmap;
     private DataFragment dataFragment;
 
-    NoteFragmentPresenter(NoteFragment mView, NoteModel data) {
+    @Inject
+    NoteFragmentPresenter(NoteFragment mView, RequestManager glide) {
         this.mView = mView;
-        this.mNote = data;
+        this.glide = glide;
 
         FragmentManager fm = mView.getFragmentManager();
         dataFragment = (DataFragment) Objects.requireNonNull(fm).findFragmentByTag("data");
@@ -56,7 +62,8 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
     }
 
     @Override
-    public void initFragmentData() {
+    public void initFragmentData(NoteModel mNote) {
+        this.mNote = mNote;
         // if user clicked on a note to update it it calls this function to update the ui of the fragment
         // else init a new note object
         if (mNote != null) {
@@ -67,7 +74,7 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
                 mBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 mView.onImageAdded(mBitmap, 2f);
             }
-        } else mNote = new NoteModel();
+        } else this.mNote = new NoteModel();
     }
 
     @Override
@@ -87,8 +94,7 @@ public class NoteFragmentPresenter implements INoteFragContract.IPresenter {
         mNote = dataFragment.getData();
         String currentImage = dataFragment.getTempImage();
         if (currentImage != null) {
-            Glide.with(Objects.requireNonNull(mView.getContext()))
-                    .asBitmap()
+            glide.asBitmap()
                     .load(BitmapUtil.decodeImage(currentImage))
                     .into(mView.imageNote);
         }

@@ -46,4 +46,12 @@ public class DataFragment extends Fragment {
     public void setmUpdated(int mUpdated) {
         this.mUpdated = mUpdated;
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mUpdated = 0;
+        tempImage = null;
+        data = null;
+    }
 }

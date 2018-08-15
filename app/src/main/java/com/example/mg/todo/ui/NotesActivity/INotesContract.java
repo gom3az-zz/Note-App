@@ -29,6 +29,10 @@ public interface INotesContract {
 
         void onStop();
 
+        void onAdd(NoteModel position);
+
+        void onUpdate(NoteModel newNote, int position);
+
     }
 
     interface IDate {

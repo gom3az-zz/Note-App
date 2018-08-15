@@ -12,9 +12,9 @@ import android.widget.RelativeLayout;
 import com.example.mg.todo.App;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
-import com.example.mg.todo.ui.DaggerINoteActivityComponent;
-import com.example.mg.todo.ui.NoteActivityModule;
 import com.example.mg.todo.ui.NoteFragment.NoteFragment;
+import com.example.mg.todo.ui.NotesActivity.DI.DaggerINoteActivityComponent;
+import com.example.mg.todo.ui.NotesActivity.DI.NoteActivityModule;
 import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
 import com.squareup.leakcanary.RefWatcher;
 

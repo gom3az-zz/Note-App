@@ -1,4 +1,4 @@
-package com.example.mg.todo.ui;
+package com.example.mg.todo.ui.NotesActivity.DI;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

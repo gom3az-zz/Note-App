@@ -2,7 +2,7 @@ package com.example.mg.todo.data;
 
 import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.data.model.PrefrenceHelper;
-import com.example.mg.todo.ui.INoteActivityScope;
+import com.example.mg.todo.ui.NotesActivity.DI.INoteActivityScope;
 import com.example.mg.todo.ui.NotesActivity.INotesContract;
 
 import java.util.ArrayList;

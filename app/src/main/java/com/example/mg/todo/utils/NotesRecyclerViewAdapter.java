@@ -1,9 +1,7 @@
 package com.example.mg.todo.utils;
 
 import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,28 +10,33 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
+import com.example.mg.todo.ui.NotesActivity.DI.INoteActivityScope;
+import com.example.mg.todo.ui.NotesActivity.NotesActivity;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@INoteActivityScope
 public class NotesRecyclerViewAdapter
         extends RecyclerView.Adapter<NotesRecyclerViewAdapter.ViewHolder> {
 
     private OnItemLongClickListener itemLongClickListener;
     private OnItemClickListener onItemClickListener;
     private List<NoteModel> mValues;
-    private Context mContext;
+    private final RequestManager glide;
 
-    public NotesRecyclerViewAdapter(Context context, List<NoteModel> set) {
-        itemLongClickListener = (OnItemLongClickListener) context;
-        onItemClickListener = (OnItemClickListener) context;
-        mValues = set;
-        mContext = context;
+    @Inject
+    NotesRecyclerViewAdapter(NotesActivity context, RequestManager glide) {
+        itemLongClickListener = context;
+        onItemClickListener = context;
+        this.glide = glide;
     }
 
     public void setAll(List<NoteModel> values) {
@@ -53,7 +56,6 @@ public class NotesRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        //final Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bounce);
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -62,7 +64,6 @@ public class NotesRecyclerViewAdapter
                         holder.radioButton.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                 holder.radioButton.setChecked(!holder.radioButton.isChecked());
                 doBounceAnimation(holder.itemView);
-                //holder.itemView.startAnimation(animation);
                 return itemLongClickListener.onItemLongClicked(holder.getAdapterPosition());
             }
         });
@@ -87,8 +88,7 @@ public class NotesRecyclerViewAdapter
         if (mValues.get(position).getImage() == null) holder.imageView.setVisibility(View.GONE);
         else {
             holder.imageView.setVisibility(View.VISIBLE);
-            Glide.with(mContext)
-                    .load(BitmapUtil.decodeImage(mValues.get(position).getImage()))
+            glide.load(BitmapUtil.decodeImage(mValues.get(position).getImage()))
                     .into(holder.imageView);
         }
     }
@@ -101,7 +101,6 @@ public class NotesRecyclerViewAdapter
             return 0;
         }
     }
-
 
     class ViewHolder extends RecyclerView.ViewHolder {
 

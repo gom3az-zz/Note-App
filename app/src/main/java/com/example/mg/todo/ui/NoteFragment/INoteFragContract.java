@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 
+import com.example.mg.todo.data.model.NoteModel;
+
 public interface INoteFragContract {
     interface IView {
         void onImageAdded(Bitmap image, float factor);
@@ -15,7 +17,7 @@ public interface INoteFragContract {
 
     interface IPresenter {
 
-        void initFragmentData();
+        void initFragmentData(NoteModel mNote);
 
         void onDoneClick();
 

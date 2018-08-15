@@ -1,4 +1,4 @@
-package com.example.mg.todo.ui;
+package com.example.mg.todo.ui.NotesActivity.DI;
 
 import com.example.mg.todo.IAppComponent;
 import com.example.mg.todo.ui.NotesActivity.NotesActivity;
