@@ -20,7 +20,7 @@ public class NotesPresenter implements INotesContract.IPresenter {
     private final NotesActivity mView;
     private final DataProvider data;
     private NotesRecyclerViewAdapter notesRecyclerViewAdapter;
-    private List<String> mSelectedNotes = new ArrayList<>();
+    private List<String> mSelectedNotes;
     //private static final String TAG = "NotesPresenter";
 
     @Inject
@@ -28,6 +28,7 @@ public class NotesPresenter implements INotesContract.IPresenter {
         this.mView = mView;
         this.data = dataProvider;
         this.notesRecyclerViewAdapter = adapter;
+        mSelectedNotes = new ArrayList<>();
     }
 
     @Override
