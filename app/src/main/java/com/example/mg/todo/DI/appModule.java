@@ -1,10 +1,11 @@
-package com.example.mg.todo;
+package com.example.mg.todo.DI;
 
 
 import android.content.Context;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.example.mg.todo.App;
 import com.example.mg.todo.data.IPrefHelper;
 import com.example.mg.todo.data.PrefrenceHelper;
 

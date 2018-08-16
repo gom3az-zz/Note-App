@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface INotesContract {
     interface IView {
-        void noteRemoved(int size);
+        void noteRemoved();
 
         void noteAdded();
 
@@ -14,8 +14,6 @@ public interface INotesContract {
     }
 
     interface IPresenter {
-
-        boolean onItemLongClick(int position);
 
         void onItemClick(int position);
 
@@ -25,7 +23,6 @@ public interface INotesContract {
 
         void onResume();
 
-        void onRemoveClicked();
 
         void onStop();
 
@@ -41,8 +38,6 @@ public interface INotesContract {
         void addNote(NoteModel newNote);
 
         void updateNote(NoteModel newNote, int mUpdated);
-
-        void removeNote(int position);
 
         NoteModel getNote(int position);
 

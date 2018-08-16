@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.mg.todo.DI.DaggerIAppComponent;
+import com.example.mg.todo.DI.IAppComponent;
+import com.example.mg.todo.DI.appModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 

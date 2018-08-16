@@ -3,8 +3,8 @@ package com.example.mg.todo.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.mg.todo.IAppContext;
-import com.example.mg.todo.IAppScope;
+import com.example.mg.todo.DI.IAppContext;
+import com.example.mg.todo.DI.IAppScope;
 import com.example.mg.todo.data.model.NoteModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

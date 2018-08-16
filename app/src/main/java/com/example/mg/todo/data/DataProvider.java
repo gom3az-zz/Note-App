@@ -37,12 +37,6 @@ public class DataProvider implements INotesContract.IDate {
     }
 
     @Override
-    public void removeNote(int position) {
-        mNoteModels.remove(position);
-        updateDataSet();
-    }
-
-    @Override
     public NoteModel getNote(int position) {
         return mNoteModels.get(position);
     }
@@ -50,7 +44,7 @@ public class DataProvider implements INotesContract.IDate {
     @Override
     public List<NoteModel> getDataModels() {
         mNoteModels = prefrenceHelper.getSavedData() != null ?
-                prefrenceHelper.getSavedData() : new ArrayList<NoteModel>();
+                prefrenceHelper.getSavedData() : new ArrayList<>();
         return mNoteModels;
     }
 }

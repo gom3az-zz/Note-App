@@ -1,4 +1,4 @@
-package com.example.mg.todo;
+package com.example.mg.todo.DI;
 
 import javax.inject.Qualifier;
 

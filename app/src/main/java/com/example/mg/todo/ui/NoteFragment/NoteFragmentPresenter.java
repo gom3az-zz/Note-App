@@ -22,7 +22,6 @@ import com.example.mg.todo.R;
 import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.ui.NoteFragment.DI.IFragmentScope;
 import com.example.mg.todo.utils.BitmapUtil;
-import com.example.mg.todo.utils.DataFragment;
 
 import java.io.File;
 import java.io.IOException;

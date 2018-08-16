@@ -2,25 +2,23 @@ package com.example.mg.todo.ui.NotesActivity;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.example.mg.todo.data.DataProvider;
 import com.example.mg.todo.data.model.NoteModel;
 import com.example.mg.todo.ui.NoteFragment.NoteFragment;
 import com.example.mg.todo.ui.NotesActivity.DI.INoteActivityScope;
-import com.example.mg.todo.utils.NotesRecyclerViewAdapter;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.example.mg.todo.utils.SwipeHelper;
 
 import javax.inject.Inject;
 
+
 @INoteActivityScope
-public class NotesPresenter implements INotesContract.IPresenter {
+public class NotesPresenter implements INotesContract.IPresenter, SwipeHelper.OnItemSwipeListener {
     private final NotesActivity mView;
     private final DataProvider mDataProvider;
     private NotesRecyclerViewAdapter mNotesAdapter;
-    private List<String> mSelectedNotes;
     //private static final String TAG = "NotesPresenter";
 
     @Inject
@@ -28,7 +26,6 @@ public class NotesPresenter implements INotesContract.IPresenter {
         this.mView = mView;
         this.mDataProvider = dataProvider;
         this.mNotesAdapter = adapter;
-        mSelectedNotes = new ArrayList<>();
     }
 
     @Override
@@ -37,6 +34,8 @@ public class NotesPresenter implements INotesContract.IPresenter {
         mNotesAdapter.setData(mDataProvider.getDataModels());
         mView.todoList.setItemAnimator(new DefaultItemAnimator());
         mView.todoList.setAdapter(mNotesAdapter);
+        ItemTouchHelper helper = new ItemTouchHelper(new SwipeHelper(0, ItemTouchHelper.LEFT, this));
+        helper.attachToRecyclerView(mView.todoList);
     }
 
     @Override
@@ -48,18 +47,6 @@ public class NotesPresenter implements INotesContract.IPresenter {
     public void onItemClick(int position) {
         NoteModel note = mDataProvider.getNote(position);
         onNoteClick(note, position);
-    }
-
-    @Override
-    public boolean onItemLongClick(int location) {
-        String position = String.valueOf(location);
-
-        if (mSelectedNotes.contains(position)) mSelectedNotes.remove(position);
-        else mSelectedNotes.add(position);
-
-        if (mSelectedNotes.size() > 0) mView.menuItem.setVisible(true);
-        else mView.menuItem.setVisible(false);
-        return true;
     }
 
     @Override
@@ -79,24 +66,6 @@ public class NotesPresenter implements INotesContract.IPresenter {
     public void onNoteDoneClick(NoteModel newNote, int mUpdated) {
         if (mUpdated == -1) onAdd(newNote);
         else onUpdate(newNote, mUpdated);
-
-        mView.menuItem.setVisible(false);
-        if (mSelectedNotes != null) mSelectedNotes.clear();
-
-    }
-
-    @Override
-    public void onRemoveClicked() {
-        //removing notes in reverse order for better ui translation
-        Collections.sort(mSelectedNotes);
-        Collections.reverse(mSelectedNotes);
-        for (String str : mSelectedNotes) {
-            mDataProvider.removeNote(Integer.valueOf(str));
-            mNotesAdapter.notifyItemRemoved(Integer.valueOf(str));
-        }
-        mView.menuItem.setVisible(false);
-        mView.noteRemoved(mSelectedNotes.size());
-        mSelectedNotes.clear();
     }
 
     @Override
@@ -111,6 +80,14 @@ public class NotesPresenter implements INotesContract.IPresenter {
         mDataProvider.updateNote(newNote, position);
         mView.noteUpdated();
         mNotesAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onItemSwipe(RecyclerView.ViewHolder viewHolder, int location) {
+
+        mNotesAdapter.removeItem(viewHolder.getAdapterPosition());
+        mView.noteRemoved();
+        mDataProvider.updateDataSet();
     }
 
 }

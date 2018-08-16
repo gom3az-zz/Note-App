@@ -1,6 +1,6 @@
 package com.example.mg.todo.ui.NotesActivity.DI;
 
-import com.example.mg.todo.IAppComponent;
+import com.example.mg.todo.DI.IAppComponent;
 import com.example.mg.todo.ui.NotesActivity.NotesActivity;
 
 import dagger.Component;
