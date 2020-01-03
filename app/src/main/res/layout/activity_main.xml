@@ -21,7 +21,6 @@
             app:popupTheme="@style/AppTheme"
             app:titleTextColor="@android:color/white" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/todoList"
             android:layout_width="match_parent"
@@ -32,7 +31,34 @@
             android:background="@color/lightColor"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/note_content" />
+            tools:listitem="@layout/note_list_item"
+            tools:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Press the notes button to add a new note"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:src="?android:attr/actionModePasteDrawable" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

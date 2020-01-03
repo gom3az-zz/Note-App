@@ -34,24 +34,26 @@ class NotesActivity : AppCompatActivity(), NotesRecyclerViewAdapter.OnItemClickL
         todoList.adapter = mNotesAdapter
 
         floatingActionButton.setOnClickListener { onNoteClicked(-1, null) }
-    }
-
-    override fun onStart() {
-        super.onStart()
 
         viewModel.loadData()
 
         viewModel.loadResult.observe(this@NotesActivity, Observer {
             val notes = it ?: return@Observer
-            mNotesAdapter.swapData(notes.toMutableList())
+
+            if (notes.isEmpty()) {
+                empty.visibility = View.VISIBLE
+            } else {
+                mNotesAdapter.swapData(notes.toMutableList())
+                empty.visibility = View.GONE
+            }
         })
 
         viewModel.updateResult.observe(this@NotesActivity, Observer {
             val result = it ?: return@Observer
             result.added?.let { onAdd() }
-            result.updated?.let { onUpdate(note = result.updated) }
+            result.removed?.let { onRemoved(result.removed) }
+            result.updated?.let { onUpdate() }
         })
-
     }
 
     override fun onDestroy() {
@@ -79,9 +81,14 @@ class NotesActivity : AppCompatActivity(), NotesRecyclerViewAdapter.OnItemClickL
         mainLayout.snack("Note added successfully!")
     }
 
-    private fun onUpdate(note: NoteModel) {
-        mNotesAdapter.notifyItemChanged(note.id.toInt() - 1)//database id starts from 1
+    private fun onUpdate() {
         mainLayout.snack("Note updated successfully!")
+
+    }
+
+    private fun onRemoved(note: NoteModel) {
+        mNotesAdapter.removeItem(note)
+        mainLayout.snack("Note deleted successfully!")
 
     }
 

@@ -15,7 +15,7 @@ class DataProvider(application: Application) {
         databaseHelper.updateNote(model)
     }
 
-    suspend fun removeNote(id: Long) {
+    suspend fun removeNote(id: NoteModel) {
         databaseHelper.deleteNote(id)
     }
 

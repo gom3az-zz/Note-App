@@ -8,7 +8,7 @@ import com.bumptech.glide.RequestManager
 import com.example.mg.todo.R
 import com.example.mg.todo.data.model.NoteModel
 import com.example.mg.todo.utils.BitmapUtil
-import kotlinx.android.synthetic.main.note_content.view.*
+import kotlinx.android.synthetic.main.note_list_item.view.*
 
 class NotesRecyclerViewAdapter(
         context: NotesActivity,
@@ -31,14 +31,14 @@ class NotesRecyclerViewAdapter(
         notifyDataSetChanged()
     }
 
-    fun removeItem(position: Int) {
-        mValues.removeAt(position)
-        notifyItemRemoved(position)
+    fun removeItem(note: NoteModel) {
+        mValues.remove(note)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.note_content,
+                .inflate(R.layout.note_list_item,
                         parent,
                         false)
         return ViewHolder(view)
@@ -63,20 +63,20 @@ class NotesRecyclerViewAdapter(
         fun bind(position: Int) {
             itemView.setOnClickListener { onItemClickListener.onItemClicked(position, mValues[position]) }
 
-            itemView.text_title.text = String.format("%s\n%s\n\n\n%s",
+            itemView.tvTitle.text = String.format("%s\n%s\n\n\n%s",
                     mValues[position].text,
                     mValues[position].description,
                     mValues[position].date)
 
             mValues[position].image?.let {
-                itemView.imageView.visibility = View.VISIBLE
+                itemView.ivAttachment.visibility = View.VISIBLE
                 glide.load(BitmapUtil.decodeImage(it))
-                        .into(itemView.imageView)
+                        .into(itemView.ivAttachment)
             }
         }
 
         fun unbind() {
-            itemView.imageView.visibility = View.GONE
+            itemView.ivAttachment.visibility = View.GONE
         }
     }
 

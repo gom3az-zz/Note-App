@@ -32,26 +32,35 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun removeNote(id: Long) {
+    fun removeNote(model: NoteModel) {
         CoroutineScope(IO).launch {
-            dataProvider.removeNote(id)
+            dataProvider.removeNote(model)
+            loadData()
+
+            withContext(Main) {
+                _updateResult.value = UpdateResult(removed = model)
+            }
         }
     }
 
-    fun updateNote(model: UpdateResult) {
+    fun updateNote(model: NoteModel) {
         CoroutineScope(IO).launch {
-
-            model.added?.let {
-                dataProvider.addNote(it)
-                loadData()
-            }
-
-            model.updated?.let {
-                dataProvider.updateNote(it)
-            }
+            dataProvider.updateNote(model)
+            loadData()
 
             withContext(Main) {
-                _updateResult.value = model
+                _updateResult.value = UpdateResult(updated = model)
+            }
+        }
+    }
+
+    fun addNote(model: NoteModel) {
+        CoroutineScope(IO).launch {
+            dataProvider.addNote(model)
+            loadData()
+
+            withContext(Main) {
+                _updateResult.value = UpdateResult(added = model)
             }
         }
     }

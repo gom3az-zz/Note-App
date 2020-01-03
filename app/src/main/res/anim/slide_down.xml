@@ -7,10 +7,10 @@
         android:fromAlpha="1.0"
         android:startOffset="0"
         android:toAlpha="0.1" />
-    <translate
+   <!-- <translate
         android:duration="@android:integer/config_shortAnimTime"
         android:fromYDelta="0"
         android:interpolator="@android:anim/accelerate_interpolator"
-        android:toYDelta="100%p" />
+        android:toYDelta="100%p" />-->
 
 </set>

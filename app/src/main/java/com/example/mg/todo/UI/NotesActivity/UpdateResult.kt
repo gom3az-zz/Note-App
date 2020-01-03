@@ -4,5 +4,6 @@ import com.example.mg.todo.data.model.NoteModel
 
 data class UpdateResult(
         val added: NoteModel? = null,
-        val updated: NoteModel? = null
+        val updated: NoteModel? = null,
+        val removed: NoteModel? = null
 )

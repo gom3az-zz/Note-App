@@ -64,10 +64,11 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
         btnDone.setOnClickListener(this)
         btnAddImage.setOnClickListener(this)
         btnCloseDialog.setOnClickListener(this)
+        btnDelete.setOnClickListener(this)
         imageNote.setOnClickListener(this)
 
         mNote?.let { noteModel ->
-
+            btnDelete.visibility = View.VISIBLE
             noteModel.image?.let {
                 val bytes = BitmapUtil.decodeImage(it)
                 mBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
@@ -76,8 +77,10 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
 
             editTextTitle.setText(noteModel.text)
             editTextDescription.setText(noteModel.description)
+            tvTitle.text = resources.getString(R.string.update_note)
 
         } ?: run {
+            btnDelete.visibility = View.GONE
             mNote = NoteModel()
         }
 
@@ -111,7 +114,7 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
 
                 mBitmap?.let {
                     note.image = BitmapUtil.encodedImage(it)
-                }?: kotlin.run {
+                } ?: kotlin.run {
                     note.image = null
                 }
 
@@ -121,11 +124,11 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
                             SimpleDateFormat("EEE, MMM d, ''yy hh:mm aaa",
                                     Locale.getDefault()).format(Date()))
 
-                    notesViewModel.updateNote(UpdateResult(updated = note))
+                    notesViewModel.updateNote(note)
                 } else {
                     note.date = SimpleDateFormat("EEE, MMM d, ''yy hh:mm aaa",
                             Locale.getDefault()).format(Date())
-                    notesViewModel.updateNote(UpdateResult(added = note))
+                    notesViewModel.addNote(note)
                 }
             }
 
@@ -144,7 +147,7 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
                     builder.requestWindowFeature(Window.FEATURE_NO_TITLE)
                     builder.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     builder.setContentView(R.layout.image_viewer)
-                    builder.image_preview.setImageBitmap(BitmapUtil.resize(mBitmap, 2f))
+                    mBitmap?.let { builder.image_preview.setImageBitmap(BitmapUtil.resize(it, 2f)) }
                     builder.show()
                 }
                 true
@@ -152,7 +155,12 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
             popup.show()
 
         } else if (view.id == R.id.btnCloseDialog) dismiss()
-        else {
+        else if (view.id == R.id.btnDelete) {
+            mNote?.let {
+                notesViewModel.removeNote(it)
+                dismiss()
+            }
+        } else {
             val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (i.resolveActivity(requireActivity().packageManager) != null) {
                 var file: File? = null
@@ -180,9 +188,12 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
 
     private fun updateImage(factor: Float) {
         imageNote.visibility = View.VISIBLE
-        val bm = BitmapUtil.resize(mBitmap, factor)
-        glide.asBitmap()
-                .load(bm)
-                .into(imageNote!!)
+
+        mBitmap?.let {
+            val resize = BitmapUtil.resize(it, factor)
+            glide.asBitmap()
+                    .load(resize)
+                    .into(imageNote!!)
+        }
     }
 }
