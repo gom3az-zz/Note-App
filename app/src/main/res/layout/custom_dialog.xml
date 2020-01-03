@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relative"
+    android:id="@+id/parentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/curvy_dialog"
@@ -8,14 +8,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_weight="0"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
         android:padding="12dp">
 
-        <Button
-            android:id="@+id/btn_close_dialog"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCloseDialog"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_gravity="center"
@@ -28,64 +27,61 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
-            android:layout_weight="0"
-            android:text="New Note"
-            android:textColor="@color/cardview_light_background"
+            android:text="@string/new_note"
+            android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0">
+        android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/edit_text_title"
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editTextTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:layout_toStartOf="@+id/btn_add_image"
+            android:layout_toStartOf="@+id/btnAddImage"
             android:background="@drawable/circular_view"
-            android:gravity="top"
             android:hint="@string/hint_new_note_title"
+            android:maxLines="5"
             android:padding="12dp"
+            android:scrollbars="vertical"
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorPrimary"
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btn_add_image"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAddImage"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             android:layout_margin="5dp"
-            android:layout_toStartOf="@+id/btn_done"
+            android:layout_toStartOf="@+id/btnDone"
             android:background="@drawable/ic_take_photo"
-            android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btn_done"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDone"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             android:layout_margin="5dp"
             android:background="@drawable/ic_send"
-            android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <EditText
-        android:id="@+id/edit_text_description"
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editTextDescription"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_margin="4dp"
-        android:layout_weight="0"
-        android:background="@color/cardview_light_background"
+        android:background="@null"
         android:gravity="top"
         android:hint="@string/hint_new_note"
         android:paddingStart="8dp"
@@ -97,16 +93,13 @@
         android:textSize="15sp"
         android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/image_note"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageNote"
         android:layout_width="300dp"
         android:layout_height="250dp"
         android:layout_gravity="center"
+        android:visibility="gone"
         android:layout_margin="4dp"
-        android:layout_weight="0"
-        android:clickable="true"
         android:padding="8dp"
         android:scaleType="fitCenter" />
-
-
 </LinearLayout>
