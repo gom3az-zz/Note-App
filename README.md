@@ -7,19 +7,19 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-* [recyclerview](https://developer.android.com/guide/topics/ui/layout/recyclerview)
-* [dagger 2](https://github.com/google/dagger)
-* MVP Pattern
-* [cardview](https://developer.android.com/guide/topics/ui/layout/cardview)
-* [gson](https://github.com/google/gson)
+* MVVM Pattern
+* [kotlin](https://kotlinlang.org/)
+* [coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html)
+* [room database](https://developer.android.com/topic/libraries/architecture/room)
+* [view model](https://developer.android.com/topic/libraries/architecture/viewmodel)
 * [butterknife](http://jakewharton.github.io/butterknife/)
 * [glide](https://github.com/bumptech/glide)
 * [leakcanary](https://github.com/square/leakcanary)
+* [recyclerview](https://developer.android.com/guide/topics/ui/layout/recyclerview)
 
-## Authors
+## Author
 
 * **Mohamed gomaa** - [gom3az](https://github.com/gom3az)
-* **ibrahim salah** - [IbrahemSalah](https://github.com/IbrahemSalah)
 
 ## Screenshots
 <div align="center">
