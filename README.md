@@ -12,7 +12,6 @@ These instructions will get you a copy of the project up and running on your loc
 * [coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html)
 * [room database](https://developer.android.com/topic/libraries/architecture/room)
 * [view model](https://developer.android.com/topic/libraries/architecture/viewmodel)
-* [butterknife](http://jakewharton.github.io/butterknife/)
 * [glide](https://github.com/bumptech/glide)
 * [leakcanary](https://github.com/square/leakcanary)
 * [recyclerview](https://developer.android.com/guide/topics/ui/layout/recyclerview)
