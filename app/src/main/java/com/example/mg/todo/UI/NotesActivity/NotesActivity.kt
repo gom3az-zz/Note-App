@@ -39,11 +39,11 @@ class NotesActivity : AppCompatActivity(), NotesRecyclerViewAdapter.OnItemClickL
 
         viewModel.loadResult.observe(this@NotesActivity, Observer {
             val notes = it ?: return@Observer
+            mNotesAdapter.swapData(notes.toMutableList())
 
             if (notes.isEmpty()) {
                 empty.visibility = View.VISIBLE
             } else {
-                mNotesAdapter.swapData(notes.toMutableList())
                 empty.visibility = View.GONE
             }
         })
@@ -51,7 +51,7 @@ class NotesActivity : AppCompatActivity(), NotesRecyclerViewAdapter.OnItemClickL
         viewModel.updateResult.observe(this@NotesActivity, Observer {
             val result = it ?: return@Observer
             result.added?.let { onAdd() }
-            result.removed?.let { onRemoved(result.removed) }
+            result.removed?.let { onRemoved() }
             result.updated?.let { onUpdate() }
         })
     }
@@ -86,8 +86,7 @@ class NotesActivity : AppCompatActivity(), NotesRecyclerViewAdapter.OnItemClickL
 
     }
 
-    private fun onRemoved(note: NoteModel) {
-        mNotesAdapter.removeItem(note)
+    private fun onRemoved() {
         mainLayout.snack("Note deleted successfully!")
 
     }

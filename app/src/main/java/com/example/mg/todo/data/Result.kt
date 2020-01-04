@@ -1,8 +1,8 @@
-package com.example.mg.todo.UI.NotesActivity
+package com.example.mg.todo.data
 
 import com.example.mg.todo.data.model.NoteModel
 
-data class UpdateResult(
+data class Result(
         val added: NoteModel? = null,
         val updated: NoteModel? = null,
         val removed: NoteModel? = null

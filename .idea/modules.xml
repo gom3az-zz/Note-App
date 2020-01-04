@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Desktop-notes.iml" filepath="$PROJECT_DIR$/Desktop-notes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/Desktop-notes-app.iml" filepath="$PROJECT_DIR$/app/Desktop-notes-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mohamed.gomaa-Desktop-notes.iml" filepath="$PROJECT_DIR$/mohamed.gomaa-Desktop-notes.iml" />
       <module fileurl="file://$PROJECT_DIR$/notes.iml" filepath="$PROJECT_DIR$/notes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/notes-app.iml" filepath="$PROJECT_DIR$/app/notes-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/todo.iml" filepath="$PROJECT_DIR$/todo.iml" />
     </modules>
   </component>

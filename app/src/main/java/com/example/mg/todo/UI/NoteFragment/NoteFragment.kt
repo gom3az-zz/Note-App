@@ -19,7 +19,6 @@ import com.bumptech.glide.RequestManager
 import com.example.mg.todo.BuildConfig
 import com.example.mg.todo.R
 import com.example.mg.todo.UI.NotesActivity.NotesViewModel
-import com.example.mg.todo.UI.NotesActivity.UpdateResult
 import com.example.mg.todo.data.model.NoteModel
 import com.example.mg.todo.utils.BitmapUtil
 import kotlinx.android.synthetic.main.custom_dialog.*

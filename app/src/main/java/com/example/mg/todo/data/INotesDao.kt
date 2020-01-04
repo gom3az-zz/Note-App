@@ -13,11 +13,11 @@ interface INotesDao {
     suspend fun findNoteById(id: Long): NoteModel
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNote(vararg note: NoteModel)
+    suspend fun insertNote(note: NoteModel): Long
 
     @Delete
-    suspend fun deleteNote(vararg note: NoteModel)
+    suspend fun deleteNote(vararg note: NoteModel): Int
 
     @Update
-    suspend fun updateNote(vararg note: NoteModel)
+    suspend fun updateNote(vararg note: NoteModel): Int
 }
