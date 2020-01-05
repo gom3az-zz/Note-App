@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/home_dest">
+
+    <fragment
+        android:id="@+id/home_dest"
+        android:name="com.example.mg.todo.UI.NotesActivity.NoteListFragment"
+        tools:layout="@layout/fragment_note_list">
+    </fragment>
+
+    <dialog
+        android:id="@+id/noteFragmentDialog"
+        android:name="com.example.mg.todo.UI.NoteFragment.NoteFragment"
+        tools:layout="@layout/note_fragment">
+
+        <action
+            android:id="@+id/next_action"
+            app:destination="@+id/home_dest"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down" />
+
+    </dialog>
+
+</navigation>

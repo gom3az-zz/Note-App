@@ -11,7 +11,7 @@ import com.example.mg.todo.utils.BitmapUtil
 import kotlinx.android.synthetic.main.note_list_item.view.*
 
 class NotesRecyclerViewAdapter(
-        context: NotesActivity,
+        context: NoteListFragment,
         glide: RequestManager,
         mValues: MutableList<NoteModel>
 ) : RecyclerView.Adapter<NotesRecyclerViewAdapter.ViewHolder>() {
@@ -31,11 +31,6 @@ class NotesRecyclerViewAdapter(
         notifyDataSetChanged()
     }
 
-    fun removeItem(note: NoteModel) {
-        mValues.remove(note)
-        notifyDataSetChanged()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.note_list_item,
@@ -52,16 +47,17 @@ class NotesRecyclerViewAdapter(
         super.onViewRecycled(holder)
         holder.unbind()
     }
+
     override fun getItemCount(): Int = mValues.size
 
     interface OnItemClickListener {
-        fun onItemClicked(position: Int, model: NoteModel)
+        fun onItemClicked(model: NoteModel)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(position: Int) {
-            itemView.setOnClickListener { onItemClickListener.onItemClicked(position, mValues[position]) }
+            itemView.setOnClickListener { onItemClickListener.onItemClicked(mValues[position]) }
 
             itemView.tvTitle.text = String.format("%s\n%s\n\n\n%s",
                     mValues[position].text,

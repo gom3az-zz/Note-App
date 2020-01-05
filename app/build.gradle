@@ -43,9 +43,13 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$cor_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$cor_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 
     implementation "androidx.room:room-runtime:$room_version"

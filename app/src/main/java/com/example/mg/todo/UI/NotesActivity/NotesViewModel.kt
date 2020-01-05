@@ -33,49 +33,67 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
 
     fun removeNote(model: NoteModel) {
         CoroutineScope(Main).launch {
-            var removedNote: Int = -1
-
+            var id: Int = -1
             withContext(Dispatchers.IO) {
-                removedNote = dataProvider.removeNote(model)
+                id = dataProvider.removeNote(model)
+            }
+            if (id > -1) {
+                val list = _loadResult.value?.toMutableList()
+                list?.removeAll { noteModel -> noteModel.id == model.id }
+                _loadResult.value = list
             }
             _updateResult.value = Result(removed = model)
 
-            if (removedNote > -1) {
-                val list = _loadResult.value?.toMutableList()
-                list?.remove(model)
-                _loadResult.value = list
-            }
         }
     }
 
     fun updateNote(model: NoteModel) {
         CoroutineScope(Main).launch {
-            var updatedNote: Int = -1
+            var id: Int = -1
             withContext(Dispatchers.IO) {
-                updatedNote = dataProvider.updateNote(model)
+                id = dataProvider.updateNote(model)
+            }
+            if (id > -1) {
+                val list = _loadResult.value?.toMutableList()
+                list?.map { noteModel ->
+                    if (noteModel.id == model.id) {
+                        noteModel.image = model.image
+                        noteModel.date = model.date
+                        noteModel.text = model.text
+                        noteModel.description = model.description
+                    }
+                }
+                _loadResult.value = list
             }
             _updateResult.value = Result(updated = model)
-
-            if (updatedNote > -1) {
-                _loadResult.value = loadResult.value
-            }
         }
     }
 
     fun addNote(model: NoteModel) {
         CoroutineScope(Main).launch {
-            var addedNote: Long = -1
+            var id: Long = -1
             withContext(Dispatchers.IO) {
-                addedNote = dataProvider.addNote(model)
-
+                id = dataProvider.addNote(model)
             }
-            _updateResult.value = Result(added = model)
-
-            if (addedNote > -1) {
+            if (id > -1) {
                 val list = _loadResult.value?.toMutableList()
+                model.id = id
                 list?.add(model)
                 _loadResult.value = list
             }
+            _updateResult.value = Result(added = model)
         }
+    }
+
+    fun getNote(id: Long): LiveData<NoteModel> {
+        var note: NoteModel? = null
+        val liveData = MutableLiveData<NoteModel>()
+        CoroutineScope(Main).launch {
+            withContext(Dispatchers.IO) {
+                note = dataProvider.getNote(id)
+            }
+            liveData.value = note
+        }
+        return liveData
     }
 }

@@ -11,6 +11,10 @@ class DataProvider(application: Application) {
         return databaseHelper.insertNote(model)
     }
 
+    suspend fun getNote(id: Long): NoteModel {
+        return databaseHelper.findNoteById(id)
+    }
+
     suspend fun updateNote(model: NoteModel): Int {
         return databaseHelper.updateNote(model)
     }

@@ -13,6 +13,7 @@ import android.view.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -21,15 +22,15 @@ import com.example.mg.todo.R
 import com.example.mg.todo.UI.NotesActivity.NotesViewModel
 import com.example.mg.todo.data.model.NoteModel
 import com.example.mg.todo.utils.BitmapUtil
-import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.android.synthetic.main.image_viewer.*
+import kotlinx.android.synthetic.main.note_fragment.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class NoteFragment : DialogFragment(), View.OnClickListener {
-    private var position = -1
+    private var position = -1L
     private var mBitmap: Bitmap? = null
     private var mNote: NoteModel? = null
     private var mFileLocation: String? = null
@@ -40,20 +41,26 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
 
     companion object {
         private const val REQUEST_CODE = 19
-    }
+        const val NOTE_ID = "id"
 
-    fun setModel(position: Int, model: NoteModel?) {
-        this.mNote = model
-        this.position = position
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.dialog_slide_animation)
+
+        arguments?.getLong(NOTE_ID)?.let {
+            this.position = it
+            notesViewModel.getNote(it).observe(this@NoteFragment, Observer { model ->
+                mNote = model
+                updateView()
+            })
+        }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.custom_dialog, container, false)
+        return inflater.inflate(R.layout.note_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,7 +72,9 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
         btnCloseDialog.setOnClickListener(this)
         btnDelete.setOnClickListener(this)
         imageNote.setOnClickListener(this)
+    }
 
+    private fun updateView() {
         mNote?.let { noteModel ->
             btnDelete.visibility = View.VISIBLE
             noteModel.image?.let {
@@ -82,13 +91,18 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
             btnDelete.visibility = View.GONE
             mNote = NoteModel()
         }
-
     }
 
     override fun onDetach() {
         super.onDetach()
         mBitmap?.recycle()
-        dismiss()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            mBitmap = BitmapUtil.resamplePic(mFileLocation)
+            updateImage(1f)
+        }
     }
 
     override fun onClick(view: View) {
@@ -117,7 +131,7 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
                     note.image = null
                 }
 
-                if (position != -1) {
+                if (position != -1L) {
                     note.date = String.format(
                             "Edited on: %s",
                             SimpleDateFormat("EEE, MMM d, ''yy hh:mm aaa",
@@ -175,13 +189,6 @@ class NoteFragment : DialogFragment(), View.OnClickListener {
                     startActivityForResult(i, REQUEST_CODE)
                 }
             }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            mBitmap = BitmapUtil.resamplePic(mFileLocation)
-            updateImage(1f)
         }
     }
 
